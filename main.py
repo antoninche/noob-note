@@ -1,20 +1,26 @@
 # -*- coding: utf-8 -*-
+"""
+PRONOTE CLI v3.0 - Spécialité NSI
+Système de gestion de notes avec SQL, POO et Moyennes pondérées.
+"""
 import sqlite3
+from datetime import datetime
 
 # ----------------------------- LOGIQUE SQL ------------------------
 
 def connexion_globale(user_id, mdp):
+    """Vérifie les identifiants dans les tables Professeurs ou Eleves."""
     conn = sqlite3.connect('pronote.db')
     cur = conn.cursor()
     
-    # On cherche d'abord dans les profs
+    # Test chez les Professeurs
     cur.execute("SELECT nom, prenom FROM Professeurs WHERE id_prof = ? AND mot_de_passe = ?", (user_id, mdp))
     res = cur.fetchone()
     if res:
         conn.close()
         return ("PROF", res[0], res[1])
     
-    # Sinon on cherche dans les élèves
+    # Test chez les Elèves
     cur.execute("SELECT nom, prenom FROM Eleves WHERE id_eleve = ? AND mot_de_passe = ?", (user_id, mdp))
     res = cur.fetchone()
     conn.close()
@@ -32,82 +38,125 @@ class Utilisateur:
         self.prenom = prenom
 
 class Professeur(Utilisateur):
-    def ajouter_note(self, id_eleve, id_matiere, note):
+    def ajouter_note(self, id_eleve, id_matiere, note, coeff):
+        """Ajoute une note avec coefficient et date automatique."""
+        date_du_jour = datetime.now().strftime("%d/%m/%Y")
         conn = sqlite3.connect('pronote.db')
         cur = conn.cursor()
-        cur.execute("INSERT INTO Notes (valeur, id_eleve, id_matiere) VALUES (?, ?, ?)", (note, id_eleve, id_matiere))
+        cur.execute('''INSERT INTO Notes (valeur, coefficient, date_note, id_eleve, id_matiere) 
+                       VALUES (?, ?, ?, ?, ?)''', (note, coeff, date_du_jour, id_eleve, id_matiere))
         conn.commit()
         conn.close()
-        print(f"✅ Note de {note} ajoutée pour l'élève {id_eleve}")
+        print(f"\n✅ Note de {note} (coeff {coeff}) enregistrée pour l'élève {id_eleve}.")
 
-    def voir_tous_eleves(self):
+    def moyenne_classe(self, id_classe, id_matiere):
+        """Calcule la moyenne pondérée de toute une classe pour une matière."""
         conn = sqlite3.connect('pronote.db')
         cur = conn.cursor()
-        cur.execute("SELECT id_eleve, nom, prenom FROM Eleves")
-        for e in cur.fetchall():
-            print(f"ID: {e[0]} | {e[2]} {e[1]}")
+        cur.execute('''SELECT SUM(valeur * coefficient) / SUM(coefficient) 
+                       FROM Notes JOIN Eleves ON Notes.id_eleve = Eleves.id_eleve 
+                       WHERE Eleves.id_classe = ? AND Notes.id_matiere = ?''', (id_classe, id_matiere))
+        moy = cur.fetchone()[0]
         conn.close()
+        if moy:
+            print(f"\n📈 Moyenne pondérée de la classe : {moy:.2f}/20")
+        else:
+            print("\n⚠️ Aucune donnée disponible pour ce calcul.")
+
+    def chercher_eleve(self, nom_recherche):
+        """Recherche un élève par son nom ou une partie de son nom."""
+        conn = sqlite3.connect('pronote.db')
+        cur = conn.cursor()
+        cur.execute("SELECT id_eleve, nom, prenom FROM Eleves WHERE nom LIKE ?", (f"%{nom_recherche}%",))
+        resultats = cur.fetchall()
+        conn.close()
+        print("\n--- Résultats de la recherche ---")
+        for e in resultats:
+            print(f"ID: {e[0]} | Nom: {e[1]} | Prénom: {e[2]}")
 
 class Eleve(Utilisateur):
     def voir_mes_notes(self):
+        """Affiche l'historique des notes par date décroissante."""
         conn = sqlite3.connect('pronote.db')
         cur = conn.cursor()
-        cur.execute('''SELECT Matieres.nom_matiere, Notes.valeur 
+        cur.execute('''SELECT Matieres.nom_matiere, Notes.valeur, Notes.coefficient, Notes.date_note 
                        FROM Notes JOIN Matieres ON Notes.id_matiere = Matieres.id_matiere 
-                       WHERE id_eleve = ?''', (self.id,))
+                       WHERE id_eleve = ? ORDER BY date_note DESC''', (self.id,))
         notes = cur.fetchall()
         conn.close()
-        if not notes:
-            print("Aucune note enregistrée.")
+        print("\n--- Vos Notes ---")
+        for n in notes:
+            print(f"[{n[3]}] {n[0]:<12} : {n[1]:>5}/20 (Coeff {n[2]})")
+
+    def moyenne_generale(self):
+        """Calcule la moyenne pondérée de l'élève sur toutes ses matières."""
+        conn = sqlite3.connect('pronote.db')
+        cur = conn.cursor()
+        cur.execute("SELECT SUM(valeur * coefficient) / SUM(coefficient) FROM Notes WHERE id_eleve = ?", (self.id,))
+        moy = cur.fetchone()[0]
+        conn.close()
+        if moy:
+            print(f"\n⭐ Votre Moyenne Générale Pondérée : {moy:.2f}/20")
         else:
-            for n in notes:
-                print(f"{n[0]} : {n[1]}/20")
+            print("\nVous n'avez pas encore de notes.")
 
-# ----------------------------- INTERFACE CLI ------------------------
+# ----------------------------- MENUS CLI ------------------------
 
-def interface_prof(prof):
+def menu_prof(prof):
     while True:
-        print(f"\n--- ESPACE PROFESSEUR ({prof.prenom} {prof.nom}) ---")
-        print("1. Liste des élèves")
+        print(f"\n=== ESPACE PROF : {prof.prenom} {prof.nom} ===")
+        print("1. Rechercher un élève")
         print("2. Ajouter une note")
-        print("3. Déconnexion")
-        choix = input("Action > ")
+        print("3. Statistiques de classe")
+        print("4. Déconnexion")
+        choix = input("Commande > ")
 
         if choix == "1":
-            prof.voir_tous_eleves()
+            nom = input("Nom de l'élève à chercher : ")
+            prof.chercher_eleve(nom)
         elif choix == "2":
-            id_e = input("ID de l'élève : ")
-            id_m = int(input("Matière (1:Maths, 2:NSI, 3:EPS) : "))
-            note = float(input("Note : "))
-            prof.ajouter_note(id_e, id_m, note)
-        elif choix == "3": break
+            ide = input("ID de l'élève : ")
+            mat = int(input("ID Matière (1:Maths, 2:NSI, 3:EPS) : "))
+            val = float(input("Note obtenue : "))
+            cof = float(input("Coefficient : "))
+            prof.ajouter_note(ide, mat, val, cof)
+        elif choix == "3":
+            cls = int(input("ID Classe (1:T7, 2:T8, 3:T9) : "))
+            mat = int(input("ID Matière (1:Maths, 2:NSI, 3:EPS) : "))
+            prof.moyenne_classe(cls, mat)
+        elif choix == "4": break
 
-def interface_eleve(eleve):
+def menu_eleve(eleve):
     while True:
-        print(f"\n--- ESPACE ÉLÈVE ({eleve.prenom} {eleve.nom}) ---")
+        print(f"\n=== ESPACE ÉLÈVE : {eleve.prenom} {eleve.nom} ===")
         print("1. Voir mes notes")
-        print("2. Déconnexion")
-        choix = input("Action > ")
+        print("2. Voir ma moyenne générale")
+        print("3. Déconnexion")
+        choix = input("Commande > ")
 
         if choix == "1":
             eleve.voir_mes_notes()
-        elif choix == "2": break
+        elif choix == "2":
+            eleve.moyenne_generale()
+        elif choix == "3": break
 
-# ----------------------------- MAIN ------------------------
+# ----------------------------- BOOT ------------------------
 
-print("=== BIENVENUE SUR PRONOTE CLI ===")
-identifiant = input("ID : ")
-mdp = input("Mot de passe : ")
-
-auth = connexion_globale(identifiant, mdp)
-
-if auth:
-    role, nom, prenom = auth
-    if role == "PROF":
-        prof_objet = Professeur(identifiant, nom, prenom)
-        interface_prof(prof_objet)
+if __name__ == "__main__":
+    print("---------------------------------")
+    print("  BIENVENUE SUR PRONOTE CLI  ")
+    print("---------------------------------")
+    
+    uid = input("Identifiant : ")
+    pwd = input("Mot de passe : ")
+    
+    auth = connexion_globale(uid, pwd)
+    
+    if auth:
+        role, nom, prenom = auth
+        if role == "PROF":
+            menu_prof(Professeur(uid, nom, prenom))
+        else:
+            menu_eleve(Eleve(uid, nom, prenom))
     else:
-        eleve_objet = Eleve(identifiant, nom, prenom)
-        interface_eleve(eleve_objet)
-else:
-    print("Identifiants incorrects.")
+        print("\n❌ Accès refusé : Identifiants incorrects.")
