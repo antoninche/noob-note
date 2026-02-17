@@ -63,6 +63,16 @@ PROJET_PRONOTE/
     └── eleve.html        # Dashboard Élève (Notes & Rang)
 ```
 
+## Identifiants de connexion
+
+Pour tester le projet vous aurez besoin d'identifiants de connections.
+Elève: 
+   Identifiant = 1
+   Mot de passe = pass1
+Profeseur:
+   Identifiant = p1
+   Mot de passe = mdp_prof1
+
 ## 🛠️ Installation des dépendances
 
 Avant de lancer le projet, installez les bibliothèques nécessaires à l'aide du fichier `requirements.txt` :
