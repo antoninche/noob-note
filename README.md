@@ -62,15 +62,9 @@ PROJET_PRONOTE/
     └── eleve.html        # Dashboard Élève (Notes & Rang)
 ```
 
-## 💾 Gestion de la Base de Données
+## 🛠️ Installation des dépendances
 
-Deux options s'offrent à vous selon que vous souhaitiez tester mes données ou repartir à zéro.
+Avant de lancer le projet, installez les bibliothèques nécessaires à l'aide du fichier `requirements.txt` :
 
-### Option A : Utiliser les données de test incluses
-Si vous voulez tester le programme avec mes 90 élèves (classes T7, T8, T9) et les professeurs déjà configurés :
-* **Action** : Aucune commande de base de données. Passez directement au lancement.
-
-### Option B : Initialiser une nouvelle base vierge
-Si vous souhaitez vider la base actuelle pour l'utiliser avec vos propres données, utilisez le script d'initialisation aux normes du projet :
 ```bash
-python init_db.py ```
+pip install -r requirements.txt ```
