@@ -4,15 +4,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Connexion - Pronote</title>
 </head>
-<body>
-    <div class="card login-box">
-        <h1 style="color: #3e8e41;">PRONOTE</h1>
-        <form method="POST">
+<body class="login-body">
+    <div class="card login-card">
+        <h1 style="color: #3e8e41; margin-bottom: 20px;">PRONOTE</h1>
+        
+        <form method="POST" class="login-form">
             <input type="text" name="user_id" placeholder="Identifiant" required>
             <input type="password" name="mdp" placeholder="Mot de passe" required>
-            <button type="submit">Se connecter</button>
+            <button type="submit" class="btn-login">Se connecter</button>
         </form>
-        {% with m = get_flashed_messages() %}{% if m %}<p style="color:red">{{m[0]}}</p>{% endif %}{% endwith %}
+
+        {% with m = get_flashed_messages() %}
+            {% if m %}
+                <p style="color:red; margin-top: 15px;">{{m[0]}}</p>
+            {% endif %}
+        {% endwith %}
     </div>
 </body>
 </html>
