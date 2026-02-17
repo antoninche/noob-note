@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Espace Élève</title>
+</head>
+<body>
+    <header>
+        <span>Mon Espace | {{ session.user.prenom }}</span>
+        <a href="/logout" class="btn-logout">Déconnexion</a>
+    </header>
+
+    <div class="container">
+        <div class="card stats-card">
+            <div class="stat-box">
+                <h2>{{ stats.moy }}/20</h2>
+                <p>Moyenne Générale</p>
+            </div>
+            <div class="stat-box">
+                <h2>{{ stats.rang }} / {{ stats.total }}</h2>
+                <p>Classement Classe</p>
+            </div>
+            <div class="stat-box">
+                <a href="/eleve/download" class="btn-download">📥 Télécharger Bulletin</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Mes Dernières Notes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matière</th>
+                        <th>Note</th>
+                        <th>Coeff</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for n in notes %}
+                    <tr>
+                        <td>{{ n[0] }}</td>
+                        <td><strong>{{ n[1] }}</strong></td>
+                        <td>{{ n[2] }}</td>
+                        <td>{{ n[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
