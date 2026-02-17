@@ -1,4 +1,4 @@
-# 📝 Projet NSI : Système de Gestion Scolaire (PRONOTE 2026)
+# 📝 Projet NSI NOOB-NOTE: Système de Gestion Scolaire (PRONOTE 2026)
 
 ## 📌 Présentation du Projet
 Ce projet est une plateforme de gestion scolaire complète développée pour la spécialité NSI. Il permet de gérer de manière centralisée les notes, les moyennes et les rangs de **90 élèves** répartis sur trois classes (**T7, T8 et T9**). 
