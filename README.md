@@ -67,4 +67,4 @@ PROJET_PRONOTE/
 Avant de lancer le projet, installez les bibliothèques nécessaires à l'aide du fichier `requirements.txt` :
 
 ```bash
-pip install -r requirements.txt ```
+pip install -r requirements.txt 
