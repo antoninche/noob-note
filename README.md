@@ -60,7 +60,7 @@ PROJET_PRONOTE/
     ├── prof.html         # Dashboard Enseignant (Navigation/Stats)
     ├── prof_gestion.html # Interface CRUD (Modif/Suppr des notes)
     └── eleve.html        # Dashboard Élève (Notes & Rang)
-
+```
 ## 💾 Gestion de la Base de Données
 
 Deux options s'offrent à vous selon que vous souhaitiez tester mes données ou repartir à zéro.
