@@ -1,0 +1,39 @@
+body { font-family: 'Segoe UI', sans-serif; background: #eaeff2; margin: 0; color: #333; }
+header { background: #2c3e50; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+.container { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
+
+/* Cartes */
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; display: inline-block; }
+
+/* Grille du haut */
+.top-controls { display: flex; gap: 20px; }
+.top-controls .card { flex: 1; }
+
+/* Onglets T7 T8 T9 */
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+.tabs a { text-decoration: none; padding: 10px 30px; background: #bdc3c7; color: #fff; border-radius: 5px; font-weight: bold; }
+.tabs a.active { background: #3498db; }
+
+/* Tableaux */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th { background: #ecf0f1; padding: 10px; text-align: left; }
+td { padding: 10px; border-bottom: 1px solid #eee; }
+
+/* Formulaires */
+input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px; }
+button { cursor: pointer; padding: 8px 15px; border: none; border-radius: 4px; color: white; background: #27ae60; font-weight: bold; }
+button:hover { background: #219150; }
+
+/* Boutons spécifiques */
+.btn-logout { color: #e74c3c; text-decoration: none; font-weight: bold; }
+.btn-action { background: #3498db; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 0.9em; }
+.btn-download { background: #e67e22; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: block; }
+.btn-red { background: #c0392b; }
+.btn-blue { background: #2980b9; }
+
+/* Stats Eleve */
+.stats-card { display: flex; justify-content: space-around; align-items: center; text-align: center; }
+.stat-box h2 { font-size: 2em; margin: 0; color: #2c3e50; }
+
+.flash { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; }
