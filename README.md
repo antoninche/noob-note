@@ -52,6 +52,7 @@ PROJET_PRONOTE/
 │
 ├── main.py               # Serveur Flask & Logique métier (POO)
 ├── pronote.db            # Base de données relationnelle
+├── requirements.txt
 ├── static/
 │   └── css/
 │       └── style.css     # Mise en page et design
