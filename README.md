@@ -66,12 +66,14 @@ PROJET_PRONOTE/
 ## Identifiants de connexion
 
 Pour tester le projet vous aurez besoin d'identifiants de connections.
+```text
 Elève: 
    Identifiant = 1
    Mot de passe = pass1
 Profeseur:
    Identifiant = p1
    Mot de passe = mdp_prof1
+```
 
 ## 🛠️ Installation des dépendances
 
