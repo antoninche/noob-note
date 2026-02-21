@@ -1,0 +1,89 @@
+/* --- BASE --- */
+body { font-family: 'Segoe UI', sans-serif; background: #eaeff2; margin: 0; color: #333; }
+header { background: #2c3e50; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+.container { max-width: 1000px; margin: 30px auto; padding: 0 15px; }
+
+/* --- SECTION LOGIN --- */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    margin: 0;
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column; /* Aligne les champs verticalement */
+    gap: 15px;             /* Espace entre les champs */
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box; /* Important pour que le padding ne casse pas la largeur */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-right: 0;        /* Supprime le margin-right des inputs globaux */
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #2980b9;
+}
+
+
+/* --- CARTES ET STRUCTURE --- */
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
+h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; display: inline-block; }
+
+.top-controls { display: flex; gap: 20px; }
+.top-controls .card { flex: 1; }
+
+.tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+.tabs a { text-decoration: none; padding: 10px 30px; background: #bdc3c7; color: #fff; border-radius: 5px; font-weight: bold; }
+.tabs a.active { background: #3498db; }
+
+/* --- TABLEAUX --- */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th { background: #ecf0f1; padding: 10px; text-align: left; }
+td { padding: 10px; border-bottom: 1px solid #eee; }
+
+/* --- BOUTONS ET FORMULAIRES --- */
+input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px; }
+button { cursor: pointer; padding: 8px 15px; border: none; border-radius: 4px; color: white; background: #27ae60; font-weight: bold; transition: 0.3s; }
+button:hover { background: #219150; opacity: 0.9; }
+
+.btn-logout { color: #e74c3c; text-decoration: none; font-weight: bold; }
+.btn-action { background: #3498db; color: white; padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 0.9em; }
+.btn-download { background: #e67e22; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: block; text-align: center; }
+.btn-red { background: #c0392b; }
+.btn-blue { background: #2980b9; }
+
+/* --- STATS ET FLASH --- */
+.stats-card { display: flex; justify-content: space-around; align-items: center; text-align: center; }
+.stat-box h2 { font-size: 2em; margin: 0; color: #2c3e50; }
+.flash { background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin-bottom: 20px; text-align: center; }
+.flash-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
