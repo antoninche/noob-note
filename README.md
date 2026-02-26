@@ -75,9 +75,31 @@ Profeseur:
    Mot de passe = mdp_prof1
 ```
 
-## 🛠️ Installation des dépendances
+## 🔄 Choisissez une Option
 
-Avant de lancer le projet, installez les bibliothèques nécessaires à l'aide du fichier `requirements.txt` :
+Vous pouvez soit **tester directement une version en ligne**, soit **cloner et exécuter le projet en local** :
+
+### ⚡ Option 1 — Tester la Version en Ligne
+
+L’application est disponible en version déployée.  
+Il suffit d’ouvrir l’URL suivante dans votre navigateur pour explorer toutes les fonctionnalités sans rien installer :
+
+👉 https://noob-note.onrender.com
+
+
+---
+
+### 🧰 Option 2 — Recréer et Lancer en Local
+
+Clonez le dépôt :
 
 ```bash
-pip install -r requirements.txt 
+git clone https://github.com/antoninche/noob-note.git
+cd noob-note
+pip install -r requirements.txt
+flask run
+```
+Ouvrez votre naviguateur : 
+```text
+http://127.0.0.1:5000
+```
