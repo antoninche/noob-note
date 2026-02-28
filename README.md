@@ -99,6 +99,13 @@ cd noob-note
 pip install -r requirements.txt
 flask run
 ```
+
+---
+
+## 👤 Auteur
+
+Projet réalisé dans un objectif d’apprentissage avancé et de portfolio e-commerce front-end.
+
 Ouvrez votre naviguateur : 
 ```text
 http://127.0.0.1:5000
