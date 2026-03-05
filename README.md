@@ -23,7 +23,7 @@ L'application est passée d'une version console à une architecture **Web dynami
 * **Indicateurs de Performance** : 
     * Calcul de la moyenne générale pondérée.
     * Positionnement au sein de la classe (Rang).
-* **Exportation Officielle** : Génération d'un fichier `bulletin_NOM_PRENOM.txt` avec un rendu ASCII structuré.
+* **Exportation Officielle** : Génération d'un fichier `bulletin_NOM_PRENOM.txt`.
 
 ---
 
