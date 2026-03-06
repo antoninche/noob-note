@@ -1,0 +1,20 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}Mes données - PRONOTE{% endblock %}
+
+{% block contenu %}
+<section class="card page-simple">
+    <h2>Mon profil</h2>
+    {% if infos %}
+        <div class="infos-grid">
+            <p><strong>Identifiant :</strong> {{ infos.id_eleve }}</p>
+            <p><strong>Nom :</strong> {{ infos.nom }}</p>
+            <p><strong>Prénom :</strong> {{ infos.prenom }}</p>
+            <p><strong>Date de naissance :</strong> {{ infos.date_naissance }}</p>
+            <p><strong>Classe :</strong> {{ infos.nom_classe }} (id {{ infos.id_classe }})</p>
+        </div>
+    {% else %}
+        <p>Impossible de charger les données de l'élève.</p>
+    {% endif %}
+</section>
+{% endblock %}

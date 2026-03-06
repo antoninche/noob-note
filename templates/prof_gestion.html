@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Gestion des Notes</title>
+</head>
+<body>
+    <header>
+        <a href="/prof" style="color: white; text-decoration: none;">← Retour Tableau de Bord</a>
+        <span>Gestion Élève ID : {{ id_eleve }}</span>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h3>➕ Ajouter une nouvelle note</h3>
+            <form method="POST" class="form-inline">
+                <input type="hidden" name="ajouter" value="1">
+                <select name="matiere">
+                    <option value="1">Maths</option>
+                    <option value="2">NSI</option>
+                    <option value="3">EPS</option>
+                    <option value="4">Français</option>
+                    <option value="5">Physique</option>
+                    <option value="6">Histoire</option>
+                </select>
+                <input type="number" step="0.5" name="note" placeholder="Note /20" required>
+                <input type="number" step="0.5" name="coeff" placeholder="Coeff" required>
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>📝 Notes de l'élève</h3>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}<p class="flash">{{ messages[0] }}</p>{% endif %}
+            {% endwith %}
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Matière</th>
+                        <th>Note</th>
+                        <th>Coeff</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for n in notes %}
+                    <tr>
+                        <form method="POST">
+                            <td>{{ n[1] }}</td>
+                            <td>
+                                <input type="hidden" name="id_note" value="{{ n[0] }}">
+                                <input type="number" step="0.5" name="valeur" value="{{ n[2] }}" style="width: 60px;">
+                            </td>
+                            <td>
+                                <input type="number" step="0.5" name="coeff" value="{{ n[3] }}" style="width: 50px;">
+                            </td>
+                            <td>{{ n[4] }}</td>
+                            <td>
+                                <button type="submit" name="modifier" value="1" class="btn-small btn-blue">Modifier</button>
+                                <button type="submit" name="supprimer" value="1" class="btn-small btn-red" onclick="return confirm('Sur ?')">Suppr.</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

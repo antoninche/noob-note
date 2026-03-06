@@ -1,0 +1,15 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}{{ titre_page }} - PRONOTE{% endblock %}
+
+{% block contenu %}
+<section class="card bloc-construction">
+    <h2>🚧 {{ titre_page }} : en cours de production</h2>
+    <p>
+        Cette page sera bientôt disponible. Tu pourras y retrouver des informations
+        liées à ta classe (dont l'emploi du temps avec heures de cours et professeurs)
+        dès que les données seront ajoutées dans la base.
+    </p>
+    <a href="{{ url_for('eleve_dashboard') }}" class="btn-download">Retour à mes notes</a>
+</section>
+{% endblock %}

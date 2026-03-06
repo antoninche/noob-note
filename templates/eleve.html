@@ -1,0 +1,123 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}PRONOTE - Notes{% endblock %}
+
+{% block contenu %}
+<section class="resume-general">
+    <div>
+        <p>Moyenne générale élève</p>
+        <h2>{{ stats.moy }}/20</h2>
+    </div>
+    <div>
+        <p>Classement</p>
+        <h2>{{ stats.rang }} / {{ stats.total }}</h2>
+    </div>
+    <a href="{{ url_for('eleve_download') }}" class="btn-download">Télécharger bulletin</a>
+</section>
+
+<section class="message-encouragement card">
+    <h3>🌟 Continue comme ça {{ session.user.prenom }} !</h3>
+    <p>
+        Cette page te permet de suivre tes notes matière par matière.
+        L'objectif est simple : voir tes progrès, comprendre tes points forts,
+        et repérer rapidement les chapitres à retravailler.
+    </p>
+    <p class="ligne-lien">
+        <a class="btn-tri" href="{{ url_for('eleve_emploi_du_temps') }}">Voir l'emploi du temps</a>
+    </p>
+</section>
+
+<section class="filtres-notes">
+    <form method="GET" class="ligne-filtres">
+        <label for="periode">Période</label>
+        <select id="periode" name="periode" onchange="this.form.submit()">
+            <option value="tout" {{ 'selected' if periode_active == 'tout' }}>Toute l'année</option>
+            <option value="s1" {{ 'selected' if periode_active == 's1' }}>Semestre 1</option>
+            <option value="s2" {{ 'selected' if periode_active == 's2' }}>Semestre 2</option>
+        </select>
+
+        <label for="matiere">Matière</label>
+        <select id="matiere" name="matiere" onchange="this.form.submit()">
+            <option value="toutes" {{ 'selected' if id_matiere_active == 'toutes' }}>Toutes</option>
+            {% for matiere in matieres_disponibles %}
+                <option value="{{ matiere.id_matiere }}" {{ 'selected' if id_matiere_active == (matiere.id_matiere|string) }}>
+                    {{ matiere.nom_matiere }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" name="tri" value="{{ tri_actif }}">
+        {% if note_selectionnee %}
+            <input type="hidden" name="note" value="{{ note_selectionnee.id_note }}">
+        {% endif %}
+    </form>
+
+    <div class="boutons-tri">
+        <a href="{{ url_for('eleve_dashboard', tri='chrono', periode=periode_active, matiere=id_matiere_active) }}" class="btn-tri {{ 'actif' if tri_actif == 'chrono' }}">Par ordre chronologique</a>
+        <a href="{{ url_for('eleve_dashboard', tri='matiere', periode=periode_active, matiere=id_matiere_active) }}" class="btn-tri {{ 'actif' if tri_actif == 'matiere' }}">Par matière</a>
+    </div>
+</section>
+
+<section class="zone-notes-pronote">
+    <article class="carte-notes-gauche">
+        <h3>Détail de mes notes</h3>
+
+        {% if tri_actif == 'matiere' %}
+            {% for matiere in notes_affichage %}
+                <div class="bloc-matiere-pronote">
+                    <div class="entete-matiere-pronote">
+                        <h4>{{ matiere.nom_matiere }}</h4>
+                        <strong>{{ matiere.moyenne_matiere }}/20</strong>
+                    </div>
+                    {% for note in matiere.notes %}
+                        <a class="ligne-note-pronote {{ 'active' if note_selectionnee and note_selectionnee.id_note == note.id_note }}" href="{{ url_for('eleve_dashboard', tri=tri_actif, periode=periode_active, matiere=id_matiere_active, note=note.id_note) }}">
+                            <div>
+                                <p>{{ note.date_note }}</p>
+                                <small>Coefficient {{ note.coefficient }}</small>
+                            </div>
+                            <strong>{{ note.valeur }}/20</strong>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Aucune note à afficher avec ces filtres.</p>
+            {% endfor %}
+        {% else %}
+            {% for note in notes_affichage %}
+                <a class="ligne-note-pronote {{ 'active' if note_selectionnee and note_selectionnee.id_note == note.id_note }}" href="{{ url_for('eleve_dashboard', tri=tri_actif, periode=periode_active, matiere=id_matiere_active, note=note.id_note) }}">
+                    <div>
+                        <p>{{ note.nom_matiere }} - {{ note.date_note }}</p>
+                        <small>Coefficient {{ note.coefficient }}</small>
+                    </div>
+                    <strong>{{ note.valeur }}/20</strong>
+                </a>
+            {% else %}
+                <p>Aucune note à afficher avec ces filtres.</p>
+            {% endfor %}
+        {% endif %}
+    </article>
+
+    <aside class="carte-detail-droite">
+        <h3>Détail de la note</h3>
+        {% if detail_note %}
+            <h4>{{ detail_note.matiere }}</h4>
+            <p class="sous-texte">Note du {{ detail_note.date_note }}</p>
+            <dl class="tableau-detail-note">
+                <div><dt>Note élève :</dt><dd>{{ detail_note.note_eleve }}/20</dd></div>
+                <div><dt>Moyenne classe :</dt><dd>{{ detail_note.moyenne_classe }}/20</dd></div>
+                <div><dt>Note la plus haute :</dt><dd>{{ detail_note.note_max }}/20</dd></div>
+                <div><dt>Note la plus basse :</dt><dd>{{ detail_note.note_min }}/20</dd></div>
+                <div><dt>Coefficient :</dt><dd>{{ detail_note.coefficient }}</dd></div>
+            </dl>
+            <p class="mention-note">{{ detail_note.mention }}</p>
+        {% else %}
+            <p>Choisis une note pour voir le détail.</p>
+        {% endif %}
+
+        <div class="astuce-lyceen">
+            <h4>💡 Astuce révision</h4>
+            <p>Commence par la matière où la moyenne est la plus basse : c'est souvent là que les efforts font gagner le plus vite des points.</p>
+        </div>
+    </aside>
+</section>
+{% endblock %}

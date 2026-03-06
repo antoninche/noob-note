@@ -1,0 +1,40 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}Emploi du temps - PRONOTE{% endblock %}
+
+{% block contenu %}
+<section class="card page-simple">
+    <h2>Emploi du temps de la classe</h2>
+
+    {% if not table_emploi_disponible %}
+        <p>Aucun cours n'est enregistré pour l'instant dans la base de données.</p>
+    {% endif %}
+
+    {% for jour in jours_semaine %}
+        {% set cours_du_jour = emploi_par_jour[jour] %}
+        <h3 class="titre-jour-emploi">{{ jour }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Heure</th>
+                    <th>Matière</th>
+                    <th>Professeur</th>
+                    <th>Salle</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ligne in cours_du_jour %}
+                    <tr>
+                        <td>{{ ligne.heure_debut }} - {{ ligne.heure_fin }}</td>
+                        <td>{{ ligne.matiere }}</td>
+                        <td>{{ ligne.prof }}</td>
+                        <td>{{ ligne.salle }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4">Aucun cours enregistré.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</section>
+{% endblock %}

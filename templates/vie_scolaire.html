@@ -1,0 +1,25 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}Vie scolaire - PRONOTE{% endblock %}
+
+{% block contenu %}
+<section class="card page-simple">
+    <h2>Vie scolaire</h2>
+    {% if infos %}
+        <p><strong>Classe :</strong> {{ infos.nom_classe }}</p>
+    {% endif %}
+    <div class="infos-grid">
+        <p><strong>Nombre de cours par semaine :</strong> {{ nb_cours_semaine }}</p>
+        <p><strong>Matières différentes :</strong> {{ matieres_differentes }}</p>
+    </div>
+    <p>
+        Cette page pourra ensuite accueillir les retards, absences, sanctions,
+        observations et messages de la vie scolaire.
+    </p>
+    {% if not table_emploi_disponible %}
+        <p><em>Aucun cours n'est enregistré pour l'instant dans la base.</em></p>
+    {% elif nb_cours_semaine == 0 %}
+        <p><em>Aucun cours n'est encore affecté à ta classe.</em></p>
+    {% endif %}
+</section>
+{% endblock %}

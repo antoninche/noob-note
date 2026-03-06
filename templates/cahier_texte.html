@@ -1,0 +1,20 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}Cahier de texte - PRONOTE{% endblock %}
+
+{% block contenu %}
+<section class="card page-simple">
+    <h2>Cahier de texte</h2>
+    <p>Propositions de travail basées sur tes dernières évaluations :</p>
+    <ul class="liste-cahier">
+        {% for entree in cahier %}
+            <li>
+                <span class="tag-date">{{ entree.date_note }}</span>
+                <strong>{{ entree.nom_matiere }}</strong> — {{ entree.description }}
+            </li>
+        {% else %}
+            <li>Aucune donnée disponible pour le moment.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Professeur - Tableau de Bord</title>
+</head>
+<body>
+    <header>
+        <span>PRONOTE PROF | {{ session.user.prenom }} {{ session.user.nom }}</span>
+        <a href="/logout" class="btn-logout">Déconnexion</a>
+    </header>
+
+    <div class="container">
+        <div class="top-controls">
+            <div class="card">
+                <h3>🔍 Rechercher un élève</h3>
+                <form method="GET" action="/prof">
+                    <input type="text" name="search" placeholder="Nom de l'élève...">
+                    <button type="submit">Trouver</button>
+                    <a href="/prof" class="btn-reset">Réinitialiser</a>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>📊 Statistiques de classe</h3>
+                <form method="POST" action="/prof">
+                    <input type="hidden" name="calculer_stats" value="1">
+                    <select name="stat_classe">
+                        <option value="1">T7</option>
+                        <option value="2">T8</option>
+                        <option value="3">T9</option>
+                    </select>
+                    <select name="stat_matiere">
+                        <option value="1">Maths</option>
+                        <option value="2">NSI</option>
+                        <option value="3">EPS</option>
+                        <option value="4">Français</option>
+                        <option value="5">Physique</option>
+                        <option value="6">Histoire</option>
+                    </select>
+                    <button type="submit">Calculer</button>
+                </form>
+                {% if stats %}
+                <div class="stats-result">
+                    Moyenne: <strong>{{ stats[0]|round(2) }}</strong> | Min: {{ stats[1] }} | Max: {{ stats[2] }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tabs">
+            <a href="/prof?classe=1" class="{{ 'active' if current_classe == '1' }}">Classe T7</a>
+            <a href="/prof?classe=2" class="{{ 'active' if current_classe == '2' }}">Classe T8</a>
+            <a href="/prof?classe=3" class="{{ 'active' if current_classe == '3' }}">Classe T9</a>
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Gestion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in eleves %}
+                    <tr>
+                        <td>{{ e[0] }}</td>
+                        <td>{{ e[1] }}</td>
+                        <td>{{ e[2] }}</td>
+                        <td>
+                            <a href="/prof/gestion/{{ e[0] }}" class="btn-action">Gérer Notes</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4">Aucun élève trouvé.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

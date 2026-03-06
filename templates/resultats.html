@@ -1,0 +1,42 @@
+{% extends "base_eleve.html" %}
+
+{% block titre %}Résultats - PRONOTE{% endblock %}
+
+{% block contenu %}
+<section class="resume-general">
+    <div>
+        <p>Moyenne générale</p>
+        <h2>{{ stats.moy }}/20</h2>
+    </div>
+    <div>
+        <p>Rang classe</p>
+        <h2>{{ stats.rang }} / {{ stats.total }}</h2>
+    </div>
+</section>
+
+<section class="card page-simple">
+    <h2>Résultats par matière</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Matière</th>
+                <th>Moyenne</th>
+                <th>Nombre de notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in resultats %}
+                <tr>
+                    <td>{{ ligne.nom_matiere }}</td>
+                    <td><strong>{{ ligne.moyenne }}/20</strong></td>
+                    <td>{{ ligne.nb_notes }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucun résultat disponible.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}
