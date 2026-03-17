@@ -1,6 +1,6 @@
 # 📝 Projet NSI NOOB-NOTE : mini-PRONOTE en Flask + SQLite
 
-## 📌 Présentation du projet
+## Présentation du projet
 **NOOB-NOTE** est un projet NSI qui reproduit les bases de PRONOTE avec une architecture simple :
 - **Backend** en Python/Flask,
 - **base de données** en SQLite,
@@ -10,9 +10,9 @@ L’objectif est d’avoir un code clair, compréhensible par un niveau **Termin
 
 ---
 
-## ✅ Fonctionnalités actuelles
+## Fonctionnalités actuelles
 
-### 👨‍🏫 Espace Professeur
+### Espace Professeur
 - Connexion professeur.
 - Liste des élèves par classe.
 - Recherche d’élève par nom.
@@ -22,7 +22,7 @@ L’objectif est d’avoir un code clair, compréhensible par un niveau **Termin
   - supprimer une note.
 - Statistiques par matière et par classe (moyenne / min / max).
 
-### 🎓 Espace Élève
+### Espace Élève
 - Connexion élève.
 - Page **Notes** avec :
   - filtre par période,
@@ -40,7 +40,7 @@ L’objectif est d’avoir un code clair, compréhensible par un niveau **Termin
 
 ---
 
-## 🧱 Stack technique
+## Stack technique
 - **Python 3**
 - **Flask**
 - **SQLite3**
@@ -48,7 +48,7 @@ L’objectif est d’avoir un code clair, compréhensible par un niveau **Termin
 
 ---
 
-## 📂 Structure du projet (version actuelle)
+## Structure du projet (version actuelle)
 ```text
 noob-note/
 ├── app.py
@@ -75,7 +75,7 @@ noob-note/
 
 ---
 
-## 🗃️ Base de données
+## Base de données
 Le projet utilise `pronote.db`.
 
 Le script `generer_pronote_db.py` permet de générer une base de test plus riche (classes, élèves, professeurs, matières, notes, emplois du temps).
@@ -87,7 +87,7 @@ python generer_pronote_db.py
 
 ---
 
-## 🔐 Identifiants de test
+## Identifiants de test
 ```text
 Élève
   Identifiant : 1
@@ -100,7 +100,7 @@ Professeur
 
 ---
 
-## 🚀 Lancer le projet en local
+## Lancer le projet en local
 ```bash
 git clone https://github.com/antoninche/noob-note.git
 cd noob-note
@@ -115,10 +115,10 @@ http://127.0.0.1:5000
 
 ---
 
-## 🌐 Version en ligne
-👉 https://noob-note.onrender.com
+## Version en ligne
+ https://noob-note.onrender.com
 
 ---
 
-## 👤 Auteur
+## Auteur
 Projet réalisé dans un objectif d’apprentissage en spécialité NSI, avec une priorité sur la lisibilité du code.
