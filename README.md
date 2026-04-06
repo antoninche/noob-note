@@ -8,7 +8,7 @@
 
 L’objectif est d’avoir un code clair, compréhensible par un niveau **Terminale NSI**, tout en proposant une vraie logique métier (professeur / élève, notes, moyennes, rang, emploi du temps).
 
----
+---    
 
 ## Fonctionnalités actuelles
 
