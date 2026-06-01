@@ -11,7 +11,7 @@ JOURS_SEMAINE = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi']
 # -------------------------------------------------------------------------
 # CLASSES METIER (Votre code d'origine adapté Web)
 # -------------------------------------------------------------------------
-
+ 
 
 class Utilisateur:
     def __init__(self, id_u, nom, prenom):
