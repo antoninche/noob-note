@@ -10,7 +10,7 @@ Objectif:
 - 50 notes par élève réparties dans l'année
 - emploi du temps du lundi au vendredi de 08h à 18h
 - un professeur par paire de classes pour chaque matière
-"""
+""" 
 
 import argparse
 import os
