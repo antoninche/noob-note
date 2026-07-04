@@ -6,7 +6,31 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = "super_secret_key_nsi_2026"
 
+
+@app.context_processor
+def injecter_outils():
+    """Rend la fonction couleur_matiere() utilisable dans tous les templates HTML."""
+    return {'couleur_matiere': couleur_matiere}
+
 JOURS_SEMAINE = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi']
+
+# Couleur associée à chaque matière (comme dans PRONOTE, chaque matière a sa couleur).
+# 'bord' = couleur forte (trait / pastille), 'fond' = version claire pour le fond du bloc.
+COULEURS_MATIERES = {
+    'Maths':    {'bord': '#3b7ddd', 'fond': '#e8f0fd'},
+    'NSI':      {'bord': '#7c4dff', 'fond': '#efe9ff'},
+    'EPS':      {'bord': '#2fa86a', 'fond': '#e4f6ec'},
+    'Français': {'bord': '#e0567a', 'fond': '#fce8ee'},
+    'Physique': {'bord': '#e8843c', 'fond': '#fdefe2'},
+    'Histoire': {'bord': '#b07d3b', 'fond': '#f6efe0'},
+}
+
+COULEUR_MATIERE_DEFAUT = {'bord': '#0b8d83', 'fond': '#e2f4f2'}
+
+
+def couleur_matiere(nom_matiere):
+    """Retourne la couleur PRONOTE d'une matière (ou une couleur par défaut)."""
+    return COULEURS_MATIERES.get(nom_matiere, COULEUR_MATIERE_DEFAUT)
 
 # -------------------------------------------------------------------------
 # CLASSES METIER (Votre code d'origine adapté Web)
@@ -354,6 +378,34 @@ class Eleve(Utilisateur):
                 emploi_par_jour[cours['jour']].append(cours)
         return emploi_par_jour
 
+    def construire_grille_edt(self, emploi):
+        """Construit une grille hebdomadaire (heures en lignes, jours en colonnes).
+
+        Retourne une liste de lignes. Chaque ligne contient l'heure et une case
+        par jour (le cours correspondant, ou None s'il n'y a pas cours à ce créneau).
+        """
+        # On range chaque cours dans un dictionnaire avec la clé (jour, heure de début).
+        cours_par_creneau = {}
+        for cours in emploi:
+            cours_par_creneau[(cours['jour'], cours['heure_debut'])] = cours
+
+        grille = []
+        for heure in range(8, 18):
+            heure_debut = f"{heure:02d}:00"
+            heure_fin = f"{heure + 1:02d}:00"
+
+            cellules = []
+            for jour in JOURS_SEMAINE:
+                cellules.append(cours_par_creneau.get((jour, heure_debut)))
+
+            grille.append({
+                'heure_debut': heure_debut,
+                'heure_fin': heure_fin,
+                'cellules': cellules
+            })
+
+        return grille
+
     def calculer_rang(self):
         """Algorithme simple de classement dans la classe."""
         with sqlite3.connect(self.db_path) as conn:
@@ -644,12 +696,12 @@ def eleve_emploi_du_temps():
     table_emploi_disponible = eleve.table_emploi_du_temps_disponible()
     emploi = eleve.recuperer_emploi_du_temps()
 
-    emploi_par_jour = eleve.construire_emploi_par_jour(emploi)
+    grille_edt = eleve.construire_grille_edt(emploi)
 
     return rendre_page_eleve(
         'emploi_du_temps.html',
         'emploi_du_temps',
-        emploi_par_jour=emploi_par_jour,
+        grille_edt=grille_edt,
         table_emploi_disponible=table_emploi_disponible,
         jours_semaine=JOURS_SEMAINE
     )

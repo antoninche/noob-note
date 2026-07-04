@@ -1,24 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Connexion - Pronote</title>
+    <title>Connexion - PRONOTE</title>
 </head>
 <body class="login-body">
-    <div class="card login-card">
-        <h1 style="color: #3e8e41; margin-bottom: 20px;">PRONOTE</h1>
-        
+    <div class="login-card">
+        <div class="login-logo">
+            <span class="login-logo-carre">N</span>
+            <div>
+                <h1>PRONOTE</h1>
+                <p>Lycée Noob Note</p>
+            </div>
+        </div>
+
         <form method="POST" class="login-form">
-            <input type="text" name="user_id" placeholder="Identifiant" required>
-            <input type="password" name="mdp" placeholder="Mot de passe" required>
+            <label>Identifiant</label>
+            <input type="text" name="user_id" placeholder="Votre identifiant" required autofocus>
+            <label>Mot de passe</label>
+            <input type="password" name="mdp" placeholder="Votre mot de passe" required>
             <button type="submit" class="btn-login">Se connecter</button>
         </form>
 
         {% with m = get_flashed_messages() %}
             {% if m %}
-                <p style="color:red; margin-top: 15px;">{{m[0]}}</p>
+                <p class="login-erreur">{{ m[0] }}</p>
             {% endif %}
         {% endwith %}
+
+        <p class="login-pied">Espace Élèves &amp; Professeurs</p>
     </div>
 </body>
-</html> 
+</html>

@@ -26,8 +26,9 @@
         </thead>
         <tbody>
             {% for ligne in resultats %}
+                {% set couleur = couleur_matiere(ligne.nom_matiere) %}
                 <tr>
-                    <td>{{ ligne.nom_matiere }}</td>
+                    <td><span class="pastille-matiere" style="background: {{ couleur.bord }};"></span>{{ ligne.nom_matiere }}</td>
                     <td><strong>{{ ligne.moyenne }}/20</strong></td>
                     <td>{{ ligne.nb_notes }}</td>
                 </tr>

@@ -4,37 +4,49 @@
 
 {% block contenu %}
 <section class="card page-simple">
-    <h2>Emploi du temps de la classe</h2>
+    <div class="entete-page">
+        <h2>Emploi du temps de la semaine</h2>
+        <span class="badge-classe">Ma classe</span>
+    </div>
 
     {% if not table_emploi_disponible %}
         <p>Aucun cours n'est enregistré pour l'instant dans la base de données.</p>
-    {% endif %}
-
-    {% for jour in jours_semaine %}
-        {% set cours_du_jour = emploi_par_jour[jour] %}
-        <h3 class="titre-jour-emploi">{{ jour }}</h3>
-        <table>
+    {% else %}
+    <div class="grille-scroll">
+        <table class="grille-edt">
             <thead>
                 <tr>
-                    <th>Heure</th>
-                    <th>Matière</th>
-                    <th>Professeur</th>
-                    <th>Salle</th>
+                    <th class="col-heure">Heure</th>
+                    {% for jour in jours_semaine %}
+                        <th>{{ jour }}</th>
+                    {% endfor %}
                 </tr>
             </thead>
-            <tbody> 
-                {% for ligne in cours_du_jour %}
+            <tbody>
+                {% for ligne in grille_edt %}
                     <tr>
-                        <td>{{ ligne.heure_debut }} - {{ ligne.heure_fin }}</td>
-                        <td>{{ ligne.matiere }}</td>
-                        <td>{{ ligne.prof }}</td>
-                        <td>{{ ligne.salle }}</td>
+                        <td class="col-heure">
+                            <span class="h-debut">{{ ligne.heure_debut }}</span>
+                            <span class="h-fin">{{ ligne.heure_fin }}</span>
+                        </td>
+                        {% for cours in ligne.cellules %}
+                            <td class="case-edt">
+                                {% if cours %}
+                                    {% set couleur = couleur_matiere(cours.matiere) %}
+                                    <div class="bloc-cours"
+                                         style="background: {{ couleur.fond }}; border-left-color: {{ couleur.bord }};">
+                                        <strong>{{ cours.matiere }}</strong>
+                                        <span class="cours-salle">Salle {{ cours.salle }}</span>
+                                        <span class="cours-prof">{{ cours.prof }}</span>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
                     </tr>
-                {% else %}
-                    <tr><td colspan="4">Aucun cours enregistré.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
-    {% endfor %}
+    </div>
+    {% endif %}
 </section>
 {% endblock %}

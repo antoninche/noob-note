@@ -1,18 +1,26 @@
+/* =========================================================================
+   NOOB-NOTE : feuille de style unique (look inspiré de PRONOTE)
+   Organisation : variables -> base -> barres/menu -> cartes/boutons
+                  -> login -> pages prof -> page notes élève -> emploi du temps
+   ========================================================================= */
+
 :root {
-    --fond-page: #f0f2f4;
+    --fond-page: #eef1f4;
     --fond-carte: #ffffff;
-    --bordure: #d9e0e5;
-    --texte-principal: #24323d;
-    --texte-secondaire: #5f6f7b;
-    --barre-foncee: #3f4347;
-    --accent-pronote: #0b8d83;
-    --accent-pronote-clair: #d9f2ef;
-    --accent-pronote-fonce: #086a63;
-    --couleur-menthe: #0d9a90;
-    --danger: #ba2d2d;
+    --bordure: #dbe2e8;
+    --texte-principal: #23323d;
+    --texte-secondaire: #64757f;
+
+    /* Vert/teal signature de PRONOTE */
+    --pronote: #159a8e;
+    --pronote-fonce: #0d7a70;
+    --pronote-clair: #e3f5f2;
+
+    --barre-foncee: #2f3a42;
+    --danger: #d13b3b;
     --info: #2f78b7;
 }
-  
+
 * {
     box-sizing: border-box;
 }
@@ -21,18 +29,24 @@ body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--texte-principal);
-    background: radial-gradient(circle at top right, #f8fbfb 0%, var(--fond-page) 52%);
+    background: var(--fond-page);
+    line-height: 1.45;
 }
 
-/* --------- BARRES / NAV --------- */
+h2, h3, h4 {
+    color: #1e343f;
+}
+
+/* ---------- BARRE HAUTE + MENU (élève et prof) ---------- */
 .barre-haute,
 header {
-    background: var(--barre-foncee);
+    background: linear-gradient(90deg, var(--pronote) 0%, var(--pronote-fonce) 100%);
     color: #fff;
-    padding: 12px 18px;
+    padding: 12px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .identite-etablissement {
@@ -41,94 +55,118 @@ header {
     gap: 2px;
 }
 
+.identite-etablissement strong {
+    font-size: 1.08rem;
+    letter-spacing: 0.3px;
+}
+
 .identite-etablissement span {
-    color: #d9e6ef;
-    font-size: 0.92rem;
+    color: #d5f2ee;
+    font-size: 0.9rem;
 }
 
 .menu-principal {
     display: flex;
-    gap: 0;
-    background: #4a4e53;
-    border-bottom: 1px solid #35393d;
+    background: #ffffff;
+    border-bottom: 3px solid var(--pronote);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
 }
 
 .onglet-menu {
-    color: white;
+    color: #4a5b66;
     text-decoration: none;
-    padding: 11px 16px;
-    border-right: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 13px 20px;
     font-weight: 600;
     font-size: 0.92rem;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+    transition: color 0.15s, border-color 0.15s;
 }
 
-.onglet-menu:hover,
+.onglet-menu:hover {
+    color: var(--pronote);
+    background: #f6fafa;
+}
+
 .onglet-menu.actif {
-    background: #2f3337;
+    color: var(--pronote);
+    border-bottom-color: var(--pronote);
 }
 
 .btn-logout {
-    color: #a7f0e9;
+    color: #fff;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    padding: 6px 13px;
+    border-radius: 20px;
+    transition: background 0.15s;
 }
 
-/* --------- LAYOUT GLOBAL --------- */
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* ---------- LAYOUT GLOBAL ---------- */
 .container,
 .container-pronote {
     max-width: 1240px;
-    margin: 18px auto;
-    padding: 0 14px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.contenu-ecran-eleve {
+    padding-bottom: 30px;
 }
 
 .card {
-    background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+    background: var(--fond-carte);
     border: 1px solid var(--bordure);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 20px rgba(43, 60, 75, 0.08);
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 16px rgba(43, 60, 75, 0.06);
 }
 
-h3 {
-    margin-top: 0;
-    margin-bottom: 12px;
-    color: #1f3842;
-}
-
-/* --------- LOGIN --------- */
-.login-body {
+.entete-page {
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(140deg, #404448 0%, #0b8d83 100%);
+    justify-content: space-between;
+    margin-bottom: 14px;
 }
 
-.login-card {
-    width: 100%;
-    max-width: 360px;
-    text-align: center;
+.entete-page h2 {
+    margin: 0;
 }
 
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.badge-classe {
+    background: var(--pronote-clair);
+    color: var(--pronote-fonce);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 5px 14px;
+    border-radius: 20px;
 }
 
-.login-form input {
-    width: 100%;
-    margin-right: 0;
-}
-
-/* --------- FORMULAIRES / BOUTONS --------- */
+/* ---------- FORMULAIRES / BOUTONS ---------- */
 input,
 select {
-    padding: 8px;
+    padding: 9px 11px;
     border: 1px solid #c9d3db;
     border-radius: 8px;
     margin-right: 5px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--pronote);
+    box-shadow: 0 0 0 3px rgba(21, 154, 142, 0.15);
 }
 
 button,
@@ -136,64 +174,179 @@ button,
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    padding: 8px 14px;
+    padding: 9px 16px;
     color: #fff;
-    background: var(--accent-pronote);
+    background: var(--pronote);
     font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.15s;
 }
 
 button:hover,
 .btn-login:hover {
-    background: var(--accent-pronote-fonce);
+    background: var(--pronote-fonce);
 }
 
 .btn-action {
-    background: var(--info);
-    color: white;
-    padding: 6px 10px;
+    background: var(--pronote);
+    color: #fff;
+    padding: 6px 12px;
     border-radius: 6px;
     text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
 }
 
-.btn-blue {
-    background: var(--info);
+.btn-action:hover {
+    background: var(--pronote-fonce);
 }
 
-.btn-red {
-    background: var(--danger);
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.82rem;
 }
+
+.btn-blue { background: var(--info); }
+.btn-red  { background: var(--danger); }
 
 .btn-reset {
     display: inline-block;
     text-decoration: none;
     color: #44535e;
     border: 1px solid #c9d3db;
-    padding: 8px 10px;
+    padding: 8px 12px;
     border-radius: 8px;
     background: #f6f9fb;
 }
 
 .btn-download {
     text-decoration: none;
-    border-radius: 10px;
-    padding: 10px 16px;
-    background: var(--couleur-menthe);
-    color: white;
+    border-radius: 20px;
+    padding: 10px 18px;
+    background: var(--pronote);
+    color: #fff;
     font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.btn-download:hover {
+    background: var(--pronote-fonce);
 }
 
 .flash {
-    background: #ddf5f2;
+    background: var(--pronote-clair);
     border: 1px solid #9ed8d1;
-    color: #175f58;
-    padding: 9px;
-    border-radius: 6px;
+    color: #12645c;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
 }
 
-/* --------- TABLEAUX PROF --------- */
+.form-inline {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ---------- LOGIN ---------- */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(140deg, #0d7a70 0%, #159a8e 55%, #1fb0a0 100%);
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 34px 30px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+.login-logo-carre {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--pronote) 0%, var(--pronote-fonce) 100%);
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-logo h1 {
+    margin: 0;
+    color: var(--pronote-fonce);
+    letter-spacing: 1px;
+    font-size: 1.5rem;
+}
+
+.login-logo p {
+    margin: 2px 0 0 0;
+    color: var(--texte-secondaire);
+    font-size: 0.9rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.login-form label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a5b66;
+    margin-top: 8px;
+}
+
+.login-form input {
+    width: 100%;
+    margin-right: 0;
+}
+
+.login-form .btn-login {
+    margin-top: 18px;
+    padding: 12px;
+    font-size: 1rem;
+}
+
+.login-erreur {
+    margin-top: 15px;
+    padding: 9px 12px;
+    background: #fbe6e6;
+    border: 1px solid #edb4b4;
+    color: #a12626;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.login-pied {
+    margin: 22px 0 0 0;
+    text-align: center;
+    color: var(--texte-secondaire);
+    font-size: 0.82rem;
+}
+
+/* ---------- PAGES PROF ---------- */
 .top-controls {
     display: flex;
-    gap: 12px;
+    gap: 14px;
 }
 
 .top-controls .card {
@@ -203,22 +356,35 @@ button:hover,
 .tabs {
     display: flex;
     gap: 9px;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .tabs a {
     text-decoration: none;
-    background: #9ca9b3;
-    color: white;
-    padding: 9px 16px;
+    background: #fff;
+    color: #4a5b66;
+    padding: 9px 18px;
     border-radius: 8px;
-    font-weight: 700;
+    font-weight: 600;
+    border: 1px solid var(--bordure);
 }
 
 .tabs a.active {
-    background: var(--accent-pronote);
+    background: var(--pronote);
+    color: #fff;
+    border-color: var(--pronote);
 }
 
+.stats-result {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--pronote-clair);
+    border-radius: 8px;
+    color: #12645c;
+}
+
+/* ---------- TABLEAUX ---------- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -226,55 +392,70 @@ table {
 
 th {
     text-align: left;
-    background: #edf2f5;
-    padding: 9px;
+    background: #f2f6f8;
+    color: #47585f;
+    padding: 11px;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
 }
 
 td {
-    border-bottom: 1px solid #e8edf1;
-    padding: 9px;
+    border-bottom: 1px solid #eef2f4;
+    padding: 11px;
 }
 
-/* --------- PAGE NOTES ELEVE --------- */
+tbody tr:hover {
+    background: #f9fbfc;
+}
+
+/* ---------- PAGE NOTES ÉLÈVE ---------- */
 .resume-general {
-    background: linear-gradient(120deg, #f2fbfa 0%, #fff 65%);
-    border: 1px solid var(--bordure);
-    border-radius: 12px;
-    padding: 14px 16px;
+    background: linear-gradient(120deg, var(--pronote) 0%, var(--pronote-fonce) 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 18px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 16px rgba(21, 154, 142, 0.25);
 }
 
 .resume-general p {
     margin: 0;
-    color: var(--texte-secondaire);
+    color: #d5f2ee;
+    font-size: 0.9rem;
 }
 
 .resume-general h2 {
     margin: 4px 0 0 0;
-    color: #0a6d66;
+    color: #fff;
+    font-size: 1.9rem;
+}
+
+.resume-general .btn-download {
+    background: #fff;
+    color: var(--pronote-fonce);
 }
 
 .message-encouragement {
-    border-left: 6px solid var(--accent-pronote);
-    background: linear-gradient(120deg, #ebf8f6 0%, #ffffff 70%);
+    border-left: 5px solid var(--pronote);
 }
 
 .message-encouragement p {
-    margin: 0;
-    line-height: 1.5;
+    margin: 6px 0 0 0;
     color: #4f606b;
 }
 
 .filtres-notes {
     background: var(--fond-carte);
     border: 1px solid var(--bordure);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 16px rgba(43, 60, 75, 0.06);
 }
 
 .ligne-filtres {
@@ -282,7 +463,7 @@ td {
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .ligne-filtres label {
@@ -293,42 +474,44 @@ td {
 .boutons-tri {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .btn-tri {
     display: inline-block;
     text-decoration: none;
-    padding: 8px 10px;
-    border: 1px solid #9fd7d1;
-    border-radius: 8px;
-    color: #0b7269;
-    background: #f1fbfa;
+    padding: 8px 14px;
+    border: 1px solid #b9dcd8;
+    border-radius: 20px;
+    color: var(--pronote-fonce);
+    background: #fff;
     font-weight: 600;
+    font-size: 0.88rem;
 }
 
 .btn-tri.actif {
-    background: var(--accent-pronote);
-    color: white;
-    border-color: var(--accent-pronote);
+    background: var(--pronote);
+    color: #fff;
+    border-color: var(--pronote);
 }
 
 .zone-notes-pronote {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
-    gap: 12px;
+    gap: 16px;
 }
 
 .carte-notes-gauche,
 .carte-detail-droite {
     background: var(--fond-carte);
     border: 1px solid var(--bordure);
-    border-radius: 12px;
-    padding: 14px;
-    box-shadow: 0 8px 20px rgba(43, 60, 75, 0.08);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(43, 60, 75, 0.06);
 }
 
 .carte-notes-gauche {
-    max-height: 72vh;
+    max-height: 74vh;
     overflow-y: auto;
 }
 
@@ -336,10 +519,20 @@ td {
     min-height: 350px;
 }
 
+/* Petite pastille de couleur d'une matière (rappel PRONOTE) */
+.pastille-matiere {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 .bloc-matiere-pronote {
-    border: 1px solid #d5e7e4;
+    border: 1px solid #e2e8ec;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     overflow: hidden;
 }
 
@@ -347,14 +540,18 @@ td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #eef8f7;
-    border-left: 4px solid var(--accent-pronote);
-    padding: 10px;
+    padding: 11px 12px;
 }
 
 .entete-matiere-pronote h4 {
     margin: 0;
-    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+}
+
+.entete-matiere-pronote strong {
+    color: var(--pronote-fonce);
+    font-size: 1.05rem;
 }
 
 .ligne-note-pronote {
@@ -363,8 +560,8 @@ td {
     align-items: center;
     text-decoration: none;
     color: inherit;
-    padding: 9px 10px;
-    border-top: 1px solid #e6efee;
+    padding: 10px 12px;
+    border-top: 1px solid #eef2f4;
     transition: background 0.15s;
 }
 
@@ -373,21 +570,31 @@ td {
 }
 
 .ligne-note-pronote.active {
-    background: var(--accent-pronote-clair);
-    border-left: 3px solid var(--accent-pronote);
+    background: var(--pronote-clair);
+    box-shadow: inset 3px 0 0 var(--pronote);
 }
 
 .ligne-note-pronote p {
     margin: 0;
     font-weight: 600;
+    display: flex;
+    align-items: center;
 }
 
 .ligne-note-pronote small {
     color: var(--texte-secondaire);
 }
 
+.ligne-note-pronote strong {
+    background: var(--pronote-clair);
+    color: var(--pronote-fonce);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
 .sous-texte {
-    margin-top: -4px;
+    margin-top: -2px;
     color: var(--texte-secondaire);
 }
 
@@ -398,8 +605,8 @@ td {
 .tableau-detail-note div {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #e7edf0;
-    padding: 8px 0;
+    border-bottom: 1px solid #eef2f4;
+    padding: 9px 0;
     gap: 14px;
 }
 
@@ -411,14 +618,14 @@ td {
 .tableau-detail-note dd {
     margin: 0;
     font-weight: 700;
-    color: #0b6b64;
+    color: var(--pronote-fonce);
 }
 
 .astuce-lyceen {
     margin-top: 18px;
-    padding: 12px;
+    padding: 13px;
     border-radius: 10px;
-    background: #f1fbfa;
+    background: var(--pronote-clair);
     border: 1px dashed #93cec7;
 }
 
@@ -431,46 +638,105 @@ td {
     color: #4f606b;
 }
 
-@media (max-width: 980px) {
-    .top-controls,
-    .resume-general,
-    .zone-notes-pronote {
-        flex-direction: column;
-        grid-template-columns: 1fr;
-    }
-
-    .menu-principal {
-        overflow-x: auto;
-    }
+.mention-note {
+    margin-top: 12px;
+    padding: 11px;
+    border-radius: 8px;
+    background: #fff6dd;
+    border: 1px solid #f0d799;
+    color: #73530a;
+    font-weight: 600;
 }
-
 
 .ligne-lien {
-    margin-top: 12px;
+    margin-top: 14px;
 }
 
-.bloc-construction {
-    max-width: 760px;
-    margin: 36px auto;
+/* ---------- EMPLOI DU TEMPS (grille hebdomadaire) ---------- */
+.grille-scroll {
+    overflow-x: auto;
+}
+
+.grille-edt {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 4px;
+    min-width: 760px;
+}
+
+.grille-edt thead th {
+    background: var(--pronote);
+    color: #fff;
     text-align: center;
-    border-left: 6px solid var(--couleur-menthe);
+    border-radius: 8px;
+    padding: 10px;
 }
 
-.bloc-construction h2 {
-    margin-top: 0;
-    color: #0a6d66;
+.grille-edt .col-heure {
+    width: 78px;
+    background: #f2f6f8;
+    color: var(--texte-secondaire);
+    text-align: center;
+    font-weight: 600;
+    border-radius: 8px;
+    vertical-align: middle;
 }
 
-.bloc-construction p {
-    color: #4f606b;
-    line-height: 1.55;
-    margin-bottom: 20px;
+.grille-edt thead .col-heure {
+    background: var(--pronote-fonce);
+    color: #fff;
 }
 
+.grille-edt .col-heure .h-debut {
+    display: block;
+    font-weight: 700;
+    color: var(--texte-principal);
+}
 
+.grille-edt .col-heure .h-fin {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--texte-secondaire);
+}
+
+.case-edt {
+    padding: 0;
+    height: 66px;
+    background: #f7f9fa;
+    border-radius: 8px;
+    vertical-align: middle;
+}
+
+.bloc-cours {
+    height: 100%;
+    border-left: 5px solid var(--pronote);
+    border-radius: 8px;
+    padding: 7px 9px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1px;
+}
+
+.bloc-cours strong {
+    font-size: 0.92rem;
+    color: #23323d;
+}
+
+.bloc-cours .cours-salle {
+    font-size: 0.78rem;
+    color: #55666f;
+}
+
+.bloc-cours .cours-prof {
+    font-size: 0.76rem;
+    color: #7a8891;
+    font-style: italic;
+}
+
+/* ---------- PAGES SIMPLES ---------- */
 .page-simple h2 {
     margin-top: 0;
-    color: #1f3842;
 }
 
 .infos-grid {
@@ -482,7 +748,7 @@ td {
 
 .infos-grid p {
     margin: 0;
-    padding: 8px 10px;
+    padding: 10px 12px;
     border: 1px solid #dce5ea;
     border-radius: 8px;
     background: #f8fbfd;
@@ -496,41 +762,57 @@ td {
 
 .liste-cahier li {
     border: 1px solid #dce8e6;
-    border-left: 4px solid var(--accent-pronote);
+    border-left: 4px solid var(--pronote);
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 8px;
     background: #f9fdfd;
 }
 
 .tag-date {
     display: inline-block;
-    font-size: 0.85rem;
-    padding: 2px 8px;
+    font-size: 0.82rem;
+    padding: 2px 10px;
     margin-right: 8px;
-    border-radius: 99px;
-    background: var(--accent-pronote-clair);
-    color: #0a6d66;
+    border-radius: 20px;
+    background: var(--pronote-clair);
+    color: var(--pronote-fonce);
     font-weight: 600;
 }
 
-
-.contenu-ecran-eleve {
-    padding-bottom: 24px;
+.bloc-construction {
+    max-width: 760px;
+    margin: 36px auto;
+    text-align: center;
+    border-left: 5px solid var(--pronote);
 }
 
-.mention-note {
-    margin-top: 12px;
-    padding: 10px;
-    border-radius: 8px;
-    background: #fff6dd;
-    border: 1px solid #f0d799;
-    color: #73530a;
-    font-weight: 600;
+.bloc-construction h2 {
+    margin-top: 0;
+    color: var(--pronote-fonce);
+}
+
+.bloc-construction p {
+    color: #4f606b;
+    margin-bottom: 20px;
 }
 
 .titre-jour-emploi {
     margin-top: 18px;
     margin-bottom: 8px;
-    color: #0b6b64;
+    color: var(--pronote-fonce);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 980px) {
+    .top-controls,
+    .resume-general,
+    .zone-notes-pronote {
+        flex-direction: column;
+        grid-template-columns: 1fr;
+    }
+
+    .resume-general {
+        text-align: center;
+    }
 }

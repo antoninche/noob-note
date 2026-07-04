@@ -64,9 +64,10 @@
 
         {% if tri_actif == 'matiere' %}
             {% for matiere in notes_affichage %}
-                <div class="bloc-matiere-pronote">
-                    <div class="entete-matiere-pronote">
-                        <h4>{{ matiere.nom_matiere }}</h4>
+                {% set couleur = couleur_matiere(matiere.nom_matiere) %}
+                <div class="bloc-matiere-pronote" style="border-left: 4px solid {{ couleur.bord }};">
+                    <div class="entete-matiere-pronote" style="background: {{ couleur.fond }};">
+                        <h4><span class="pastille-matiere" style="background: {{ couleur.bord }};"></span>{{ matiere.nom_matiere }}</h4>
                         <strong>{{ matiere.moyenne_matiere }}/20</strong>
                     </div>
                     {% for note in matiere.notes %}
@@ -84,9 +85,10 @@
             {% endfor %}
         {% else %}
             {% for note in notes_affichage %}
+                {% set couleur = couleur_matiere(note.nom_matiere) %}
                 <a class="ligne-note-pronote {{ 'active' if note_selectionnee and note_selectionnee.id_note == note.id_note }}" href="{{ url_for('eleve_dashboard', tri=tri_actif, periode=periode_active, matiere=id_matiere_active, note=note.id_note) }}">
                     <div>
-                        <p>{{ note.nom_matiere }} - {{ note.date_note }}</p>
+                        <p><span class="pastille-matiere" style="background: {{ couleur.bord }};"></span>{{ note.nom_matiere }} - {{ note.date_note }}</p>
                         <small>Coefficient {{ note.coefficient }}</small>
                     </div>
                     <strong>{{ note.valeur }}/20</strong>
