@@ -1,17 +1,14 @@
-{% extends "base_eleve.html" %}
+{% extends "base_prof.html" %}
 
-{% block titre %}Emploi du temps - PRONOTE{% endblock %}
+{% block titre %}Mon emploi du temps - PRONOTE{% endblock %}
 
 {% block contenu %}
 <section class="card page-simple">
     <div class="entete-page">
-        <h2>Emploi du temps de la semaine</h2>
-        <span class="badge-classe">Ma classe</span>
+        <h2>Mon emploi du temps</h2>
+        <span class="badge-classe">Mes cours</span>
     </div>
 
-    {% if not table_emploi_disponible %}
-        <p>Aucun cours n'est enregistré pour l'instant dans la base de données.</p>
-    {% else %}
     <div class="grille-scroll">
         <table class="grille-edt">
             <thead>
@@ -33,11 +30,9 @@
                             <td class="case-edt {{ 'colonne-jour' if jours_semaine[loop.index0] == jour_aujourdhui }}">
                                 {% if cours %}
                                     {% set couleur = couleur_matiere(cours.matiere) %}
-                                    <div class="bloc-cours"
-                                         style="background: {{ couleur.fond }}; border-left-color: {{ couleur.bord }};">
+                                    <div class="bloc-cours" style="background: {{ couleur.fond }}; border-left-color: {{ couleur.bord }};">
                                         <strong>{{ cours.matiere }}</strong>
-                                        <span class="cours-salle">Salle {{ cours.salle }}</span>
-                                        <span class="cours-prof">{{ cours.prof }}</span>
+                                        <span class="cours-salle">{{ cours.classe }} · Salle {{ cours.salle }}</span>
                                     </div>
                                 {% endif %}
                             </td>
@@ -47,6 +42,5 @@
             </tbody>
         </table>
     </div>
-    {% endif %}
 </section>
 {% endblock %}

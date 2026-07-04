@@ -803,6 +803,82 @@ tbody tr:hover {
     color: var(--pronote-fonce);
 }
 
+/* ---------- JOUR ACTUEL DANS L'EMPLOI DU TEMPS ---------- */
+.grille-edt thead th.aujourdhui {
+    background: #0a5f57;
+    box-shadow: 0 0 0 2px #0a5f57;
+}
+
+.grille-edt .case-edt.colonne-jour {
+    background: #eef7f5;
+}
+
+/* ---------- CARTES DE RESUME (tuiles) ---------- */
+.cartes-resume {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.tuile-resume {
+    background: var(--fond-carte);
+    border: 1px solid var(--bordure);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(43, 60, 75, 0.06);
+}
+
+.tuile-nombre {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--pronote-fonce);
+}
+
+.tuile-libelle {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.85rem;
+    color: var(--texte-secondaire);
+}
+
+.tuile-alerte .tuile-nombre {
+    color: var(--danger);
+}
+
+/* ---------- ETIQUETTES VIE SCOLAIRE ---------- */
+.etiquette-vie {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.etiquette-vie.type-absence { background: var(--danger); }
+.etiquette-vie.type-retard { background: var(--info); }
+.etiquette-vie.type-observation { background: #b07d3b; }
+
+/* ---------- CAHIER DE TEXTES (devoirs) ---------- */
+.devoir-tete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.devoir-desc {
+    margin: 8px 0 0 0;
+    color: #4f606b;
+}
+
+.liste-cahier li.devoir-passe {
+    opacity: 0.6;
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 980px) {
     .top-controls,

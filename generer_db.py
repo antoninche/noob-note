@@ -2,21 +2,27 @@
 # -*- coding: utf-8 -*-
 
 """
-Script de génération d'une base PRONOTE de démonstration.
+Script de génération d'une base PRONOTE de démonstration (version enrichie).
 
-Objectif:
-- 10 classes
-- 30 élèves par classe
-- 50 notes par élève réparties dans l'année
-- emploi du temps du lundi au vendredi de 08h à 18h
-- un professeur par paire de classes pour chaque matière
-""" 
+Objectif :
+- beaucoup de classes et d'élèves,
+- 3 périodes (trimestres),
+- beaucoup de notes réparties sur l'année,
+- un cahier de textes réel (table Devoirs),
+- de la vie scolaire (absences / retards / observations),
+- un emploi du temps du lundi au vendredi de 08h à 18h,
+- des mots de passe hachés (sécurité).
+
+Par défaut, la base est écrite directement dans pronote.db.
+"""
 
 import argparse
 import os
 import random
 import sqlite3
 from datetime import datetime, timedelta
+
+from werkzeug.security import generate_password_hash
 
 NOMS = [
     "Martin", "Bernard", "Dubois", "Thomas", "Robert", "Richard", "Petit", "Durand", "Leroy", "Moreau",
@@ -28,22 +34,20 @@ NOMS = [
     "Roger", "Roche", "Roy", "Noel", "Meyer", "Lucas", "Meunier", "Jean", "Perez", "Marchand",
     "Dufour", "Blanchard", "Marie", "Barbier", "Brun", "Dumas", "Brunet", "Schmitt", "Leroux", "Colin",
     "Fernandez", "Caron", "Renard", "Arnaud", "Aubert", "Leclerc", "Marty", "Guillot", "Philippe", "Bourgeois",
-    "Pierre", "Benoit", "Rey", "Lefevre", "Rolland", "Levy", "Guillaume", "Pons", "Fischer", "Mallet",
-    "Lecomte", "Vidal", "Baron", "Picard", "Cordier", "Lemoine", "Riviere", "Marechal", "Bouvier", "Maillard"
+    "Pierre", "Benoit", "Rey", "Rolland", "Levy", "Guillaume", "Pons", "Fischer", "Mallet", "Lecomte",
 ]
 
 PRENOMS = [
     "Lucas", "Louis", "Gabriel", "Jules", "Adam", "Arthur", "Léo", "Hugo", "Raphael", "Mael",
     "Ethan", "Noah", "Nathan", "Tom", "Sacha", "Paul", "Mathis", "Axel", "Evan", "Ilyes",
-    "Malo", "Theo", "Nolan", "Timeo", "Yanis", "Enzo", "Leo", "Nino", "Baptiste", "Rayan",
-    "Julien", "Antoine", "Alexandre", "Maxime", "Florian", "Valentin", "Damien", "Quentin", "Kevin", "Tristan",
-    "Emma", "Jade", "Louise", "Alice", "Chloe", "Lina", "Mia", "Rose", "Ambre", "Lea",
-    "Anna", "Manon", "Ines", "Sarah", "Jeanne", "Nina", "Eva", "Clara", "Iris", "Lola",
-    "Camille", "Zoé", "Juliette", "Agathe", "Lucie", "Elena", "Margaux", "Adele", "Noemie", "Elsa",
-    "Marion", "Anais", "Pauline", "Mathilde", "Sophie", "Carla", "Meline", "Romane", "Alicia", "Salome",
-    "Youssef", "Imran", "Ibrahim", "Ismael", "Samir", "Karim", "Bilal", "Nassim", "Sofiane", "Rachid",
-    "Aminata", "Fatou", "Mariam", "Aicha", "Khadija", "Aya", "Sana", "Nour", "Yasmine", "Imane",
-    "Luna", "Maya", "Elisa", "Soline", "Celia", "Aurore", "Helene", "Morgane", "Celine", "Doriane"
+    "Malo", "Theo", "Nolan", "Timeo", "Yanis", "Enzo", "Nino", "Baptiste", "Rayan", "Julien",
+    "Antoine", "Alexandre", "Maxime", "Florian", "Valentin", "Damien", "Quentin", "Kevin", "Tristan", "Emma",
+    "Jade", "Louise", "Alice", "Chloe", "Lina", "Mia", "Rose", "Ambre", "Lea", "Anna",
+    "Manon", "Ines", "Sarah", "Jeanne", "Nina", "Eva", "Clara", "Iris", "Lola", "Camille",
+    "Zoé", "Juliette", "Agathe", "Lucie", "Elena", "Margaux", "Adele", "Noemie", "Elsa", "Marion",
+    "Anais", "Pauline", "Mathilde", "Sophie", "Carla", "Meline", "Romane", "Alicia", "Salome", "Youssef",
+    "Imran", "Ibrahim", "Ismael", "Samir", "Karim", "Bilal", "Nassim", "Sofiane", "Aya", "Nour",
+    "Yasmine", "Imane", "Luna", "Maya", "Elisa", "Celia", "Aurore", "Helene", "Morgane", "Celine",
 ]
 
 MATIERES = [
@@ -56,6 +60,28 @@ MATIERES = [
 ]
 
 JOURS_SEMAINE = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
+
+# Les 3 trimestres de l'année scolaire (dates au format JJ/MM/AAAA).
+PERIODES = [
+    (1, "Trimestre 1", "01/09/2025", "30/11/2025"),
+    (2, "Trimestre 2", "01/12/2025", "28/02/2026"),
+    (3, "Trimestre 3", "01/03/2026", "30/06/2026"),
+]
+
+DESCRIPTIONS_DEVOIRS = [
+    "Faire les exercices 1 à 5 page 42.",
+    "Apprendre la leçon pour l'évaluation.",
+    "Terminer le TP commencé en classe.",
+    "Rédiger une synthèse d'une page.",
+    "Réviser le chapitre en cours.",
+    "Lire le document distribué et répondre aux questions.",
+    "Préparer la présentation orale.",
+    "Faire la fiche de révision du chapitre.",
+]
+
+MOTIFS_ABSENCE = ["Maladie", "Rendez-vous médical", "Raison familiale", "Non justifiée"]
+MOTIFS_RETARD = ["Transport en retard", "Réveil tardif", "Rendez-vous", "Non justifié"]
+MOTIFS_OBSERVATION = ["Bavardages en cours", "Travail non rendu", "Très bonne participation", "Oubli de matériel"]
 
 
 # ---------------------------------------------------------------------
@@ -80,14 +106,22 @@ def format_date_fr(date_obj):
 
 def creer_tables(cur):
     """Crée toutes les tables nécessaires."""
-    cur.execute("DROP TABLE IF EXISTS EmploiDuTemps")
-    cur.execute("DROP TABLE IF EXISTS Notes")
-    cur.execute("DROP TABLE IF EXISTS Eleves")
-    cur.execute("DROP TABLE IF EXISTS Professeurs")
-    cur.execute("DROP TABLE IF EXISTS Matieres")
-    cur.execute("DROP TABLE IF EXISTS Classes")
+    for table in ["VieScolaire", "Devoirs", "EmploiDuTemps", "Notes",
+                  "Eleves", "Professeurs", "Matieres", "Periodes", "Classes"]:
+        cur.execute(f"DROP TABLE IF EXISTS {table}")
 
     cur.execute("CREATE TABLE Classes (id_classe INTEGER PRIMARY KEY, nom_classe TEXT)")
+
+    cur.execute(
+        """
+        CREATE TABLE Periodes (
+            id_periode INTEGER PRIMARY KEY,
+            nom TEXT,
+            date_debut TEXT,
+            date_fin TEXT
+        )
+        """
+    )
 
     cur.execute(
         """
@@ -149,13 +183,53 @@ def creer_tables(cur):
         """
     )
 
+    cur.execute(
+        """
+        CREATE TABLE Devoirs (
+            id_devoir INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_classe INTEGER,
+            id_matiere INTEGER,
+            id_prof TEXT,
+            date_donne TEXT,
+            date_pour TEXT,
+            description TEXT,
+            FOREIGN KEY(id_classe) REFERENCES Classes(id_classe),
+            FOREIGN KEY(id_matiere) REFERENCES Matieres(id_matiere),
+            FOREIGN KEY(id_prof) REFERENCES Professeurs(id_prof)
+        )
+        """
+    )
+
+    cur.execute(
+        """
+        CREATE TABLE VieScolaire (
+            id_evenement INTEGER PRIMARY KEY AUTOINCREMENT,
+            id_eleve TEXT,
+            type_evenement TEXT,
+            date_evenement TEXT,
+            motif TEXT,
+            justifie INTEGER,
+            FOREIGN KEY(id_eleve) REFERENCES Eleves(id_eleve)
+        )
+        """
+    )
+
 
 def inserer_classes(cur, nb_classes):
-    """Insère les classes C1 à C10."""
+    """Insère les classes (nom lisible type Terminale)."""
     for id_classe in range(1, nb_classes + 1):
         cur.execute(
             "INSERT INTO Classes (id_classe, nom_classe) VALUES (?, ?)",
-            (id_classe, f"Classe {id_classe}")
+            (id_classe, f"Terminale {id_classe}")
+        )
+
+
+def inserer_periodes(cur):
+    """Insère les 3 trimestres."""
+    for id_periode, nom, debut, fin in PERIODES:
+        cur.execute(
+            "INSERT INTO Periodes (id_periode, nom, date_debut, date_fin) VALUES (?, ?, ?, ?)",
+            (id_periode, nom, debut, fin)
         )
 
 
@@ -172,8 +246,7 @@ def creer_profs_par_matiere_et_classes(cur, nb_classes):
     """
     Crée les profs et la correspondance (classe, matière) -> professeur.
 
-    Règle demandée : 1 prof pour 2 classes par matière.
-    Donc pour 10 classes et 6 matières: 5 profs par matière.
+    Règle : 1 prof pour 2 classes par matière.
     """
     mapping = {}
 
@@ -184,7 +257,7 @@ def creer_profs_par_matiere_et_classes(cur, nb_classes):
             id_prof = f"p{id_matiere}_{groupe}"
             nom_prof = random.choice(NOMS)
             prenom_prof = random.choice(PRENOMS)
-            mot_de_passe = f"mdp_{id_prof}"
+            mot_de_passe = generate_password_hash(f"mdp_{id_prof}", method="pbkdf2")
 
             cur.execute(
                 "INSERT INTO Professeurs (id_prof, nom, prenom, mot_de_passe) VALUES (?, ?, ?, ?)",
@@ -201,7 +274,7 @@ def creer_profs_par_matiere_et_classes(cur, nb_classes):
 
 
 def inserer_eleves(cur, nb_classes, eleves_par_classe):
-    """Insère les élèves avec identifiant unique et mot de passe simple."""
+    """Insère les élèves avec identifiant unique et mot de passe haché."""
     date_min = datetime(2007, 1, 1)
     date_max = datetime(2010, 12, 31)
 
@@ -214,7 +287,7 @@ def inserer_eleves(cur, nb_classes, eleves_par_classe):
             nom = random.choice(NOMS)
             prenom = random.choice(PRENOMS)
             naissance = format_date_fr(date_aleatoire(date_min, date_max))
-            mot_de_passe = f"pass{id_eleve}"
+            mot_de_passe = generate_password_hash(f"pass{id_eleve}", method="pbkdf2")
 
             cur.execute(
                 """
@@ -224,7 +297,7 @@ def inserer_eleves(cur, nb_classes, eleves_par_classe):
                 (id_eleve, nom, prenom, naissance, mot_de_passe, id_classe)
             )
 
-            ids_eleves.append(id_eleve)
+            ids_eleves.append((id_eleve, id_classe))
             compteur += 1
 
     return ids_eleves
@@ -235,9 +308,11 @@ def inserer_notes(cur, ids_eleves, nb_notes_par_eleve):
     debut_annee = datetime(2025, 9, 1)
     fin_annee = datetime(2026, 6, 30)
 
-    for id_eleve in ids_eleves:
+    for id_eleve, _ in ids_eleves:
+        # Un petit niveau propre à l'élève rend les moyennes plus réalistes.
+        niveau = random.uniform(8, 15)
         for _ in range(nb_notes_par_eleve):
-            valeur = round(random.uniform(2, 20), 2)
+            valeur = round(min(20, max(2, random.gauss(niveau, 3))), 2)
             coefficient = random.choice([0.5, 1, 1, 1, 2, 2, 3])
             date_note = format_date_fr(date_aleatoire(debut_annee, fin_annee))
             id_matiere = random.randint(1, len(MATIERES))
@@ -252,11 +327,7 @@ def inserer_notes(cur, ids_eleves, nb_notes_par_eleve):
 
 
 def inserer_emploi_du_temps(cur, nb_classes, mapping_profs):
-    """
-    Insère un EDT complet du lundi au vendredi, de 08h à 18h.
-
-    On crée des créneaux d'1h: 08-09, 09-10, ..., 17-18.
-    """
+    """Insère un EDT complet du lundi au vendredi, de 08h à 18h (créneaux d'1h)."""
     salles = [f"B{numero:02d}" for numero in range(1, 31)]
 
     for id_classe in range(1, nb_classes + 1):
@@ -279,10 +350,62 @@ def inserer_emploi_du_temps(cur, nb_classes, mapping_profs):
                 )
 
 
+def inserer_devoirs(cur, nb_classes, mapping_profs, devoirs_par_matiere):
+    """Insère un cahier de textes : plusieurs devoirs par classe et par matière."""
+    debut_annee = datetime(2025, 9, 1)
+    fin_annee = datetime(2026, 6, 20)
+
+    for id_classe in range(1, nb_classes + 1):
+        for id_matiere, _ in MATIERES:
+            id_prof = mapping_profs[(id_classe, id_matiere)]
+            for _ in range(devoirs_par_matiere):
+                date_donne_obj = date_aleatoire(debut_annee, fin_annee)
+                date_pour_obj = date_donne_obj + timedelta(days=random.randint(2, 10))
+                description = random.choice(DESCRIPTIONS_DEVOIRS)
+
+                cur.execute(
+                    """
+                    INSERT INTO Devoirs (id_classe, id_matiere, id_prof, date_donne, date_pour, description)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (id_classe, id_matiere, id_prof,
+                     format_date_fr(date_donne_obj), format_date_fr(date_pour_obj), description)
+                )
+
+
+def inserer_vie_scolaire(cur, ids_eleves):
+    """Insère des événements de vie scolaire (absences, retards, observations)."""
+    debut_annee = datetime(2025, 9, 1)
+    fin_annee = datetime(2026, 6, 30)
+
+    for id_eleve, _ in ids_eleves:
+        for _ in range(random.randint(0, 5)):
+            type_evenement = random.choice(["Absence", "Absence", "Retard", "Observation"])
+
+            if type_evenement == "Absence":
+                motif = random.choice(MOTIFS_ABSENCE)
+            elif type_evenement == "Retard":
+                motif = random.choice(MOTIFS_RETARD)
+            else:
+                motif = random.choice(MOTIFS_OBSERVATION)
+
+            justifie = 0 if "Non justifi" in motif else random.choice([0, 1, 1])
+            date_evt = format_date_fr(date_aleatoire(debut_annee, fin_annee))
+
+            cur.execute(
+                """
+                INSERT INTO VieScolaire (id_eleve, type_evenement, date_evenement, motif, justifie)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (id_eleve, type_evenement, date_evt, motif, justifie)
+            )
+
+
 def afficher_resume(cur):
     """Affiche le nombre de lignes dans chaque table pour vérification."""
-    tables = ["Classes", "Eleves", "Professeurs", "Matieres", "Notes", "EmploiDuTemps"]
-    print("\nRésumé de la base générée:")
+    tables = ["Classes", "Periodes", "Eleves", "Professeurs", "Matieres",
+              "Notes", "EmploiDuTemps", "Devoirs", "VieScolaire"]
+    print("\nRésumé de la base générée :")
     for table in tables:
         cur.execute(f"SELECT COUNT(*) FROM {table}")
         total = cur.fetchone()[0]
@@ -293,7 +416,7 @@ def afficher_resume(cur):
 # MAIN
 # ---------------------------------------------------------------------
 
-def generer_base(chemin_db, seed):
+def generer_base(chemin_db, seed, nb_classes, eleves_par_classe, nb_notes_par_eleve):
     """Génère une base complète en écrasant le fichier si besoin."""
     random.seed(seed)
 
@@ -303,18 +426,17 @@ def generer_base(chemin_db, seed):
     conn = sqlite3.connect(chemin_db)
     cur = conn.cursor()
 
-    nb_classes = 10
-    eleves_par_classe = 30
-    nb_notes_par_eleve = 50
-
     creer_tables(cur)
     inserer_classes(cur, nb_classes)
+    inserer_periodes(cur)
     inserer_matieres(cur)
 
     mapping_profs = creer_profs_par_matiere_et_classes(cur, nb_classes)
     ids_eleves = inserer_eleves(cur, nb_classes, eleves_par_classe)
     inserer_notes(cur, ids_eleves, nb_notes_par_eleve)
     inserer_emploi_du_temps(cur, nb_classes, mapping_profs)
+    inserer_devoirs(cur, nb_classes, mapping_profs, devoirs_par_matiere=6)
+    inserer_vie_scolaire(cur, ids_eleves)
 
     conn.commit()
     afficher_resume(cur)
@@ -324,24 +446,20 @@ def generer_base(chemin_db, seed):
 def construire_arguments():
     """Lit les arguments de ligne de commande."""
     parser = argparse.ArgumentParser(description="Générer une base PRONOTE de démonstration.")
-    parser.add_argument(
-        "--sortie",
-        default="pronote_generee.db",
-        help="Chemin du fichier .db généré (défaut: pronote_generee.db)"
-    )
-    parser.add_argument(
-        "--seed",
-        type=int,
-        default=2026,
-        help="Graine aléatoire pour retrouver le même jeu de données"
-    )
+    parser.add_argument("--sortie", default="pronote.db",
+                        help="Chemin du fichier .db généré (défaut: pronote.db)")
+    parser.add_argument("--seed", type=int, default=2026,
+                        help="Graine aléatoire pour retrouver le même jeu de données")
+    parser.add_argument("--classes", type=int, default=20, help="Nombre de classes")
+    parser.add_argument("--eleves", type=int, default=30, help="Nombre d'élèves par classe")
+    parser.add_argument("--notes", type=int, default=60, help="Nombre de notes par élève")
     return parser.parse_args()
 
 
 def main():
     args = construire_arguments()
-    generer_base(args.sortie, args.seed)
-    print(f"\nBase créée: {args.sortie}")
+    generer_base(args.sortie, args.seed, args.classes, args.eleves, args.notes)
+    print(f"\nBase créée : {args.sortie}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,53 @@
+{% extends "base_prof.html" %}
+
+{% block titre %}Cahier de textes - PRONOTE{% endblock %}
+
+{% block contenu %}
+<div class="card">
+    <h3>Donner un devoir</h3>
+    <form method="POST" action="{{ url_for('prof_cahier') }}" class="form-inline">
+        <select name="classe" required>
+            {% for c in classes %}
+                <option value="{{ c[0] }}">{{ c[1] }}</option>
+            {% endfor %}
+        </select>
+        <select name="matiere" required>
+            {% for m in matieres %}
+                <option value="{{ m[0] }}">{{ m[1] }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" name="date_pour" placeholder="À rendre le (JJ/MM/AAAA)" required>
+        <input type="text" name="description" placeholder="Travail à faire..." style="min-width: 260px;" required>
+        <button type="submit">Enregistrer</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Mes derniers devoirs</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Classe</th>
+                <th>Matière</th>
+                <th>À rendre le</th>
+                <th>Travail à faire</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in devoirs %}
+            <tr>
+                <td>{{ d.classe }}</td>
+                <td>
+                    {% set couleur = couleur_matiere(d.matiere) %}
+                    <span class="pastille-matiere" style="background: {{ couleur.bord }};"></span>{{ d.matiere }}
+                </td>
+                <td>{{ d.date_pour }}</td>
+                <td>{{ d.description }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4">Aucun devoir enregistré pour l'instant.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

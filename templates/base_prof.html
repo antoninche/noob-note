@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>{% block titre %}PRONOTE Professeur{% endblock %}</title>
+</head>
+<body class="page-pronote">
+    <header class="barre-haute">
+        <div class="identite-etablissement">
+            <strong>Lycée Noob Note</strong>
+            <span>Espace Professeur - {{ session.user.prenom }} {{ session.user.nom }}</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Déconnexion</a>
+    </header>
+
+    <nav class="menu-principal">
+        <a href="{{ url_for('prof_dashboard') }}" class="onglet-menu {{ 'actif' if onglet_actif == 'dashboard' else '' }}">Tableau de bord</a>
+        <a href="{{ url_for('prof_emploi') }}" class="onglet-menu {{ 'actif' if onglet_actif == 'emploi' else '' }}">Emploi du temps</a>
+        <a href="{{ url_for('prof_cahier') }}" class="onglet-menu {{ 'actif' if onglet_actif == 'cahier' else '' }}">Cahier de textes</a>
+        <a href="{{ url_for('prof_vie_scolaire') }}" class="onglet-menu {{ 'actif' if onglet_actif == 'vie' else '' }}">Vie scolaire</a>
+    </nav>
+
+    <main class="container-pronote contenu-ecran-eleve">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}<p class="flash">{{ messages[0] }}</p>{% endif %}
+        {% endwith %}
+        {% block contenu %}{% endblock %}
+    </main>
+</body>
+</html>

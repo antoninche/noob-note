@@ -32,8 +32,9 @@
         <label for="periode">Période</label>
         <select id="periode" name="periode" onchange="this.form.submit()">
             <option value="tout" {{ 'selected' if periode_active == 'tout' }}>Toute l'année</option>
-            <option value="s1" {{ 'selected' if periode_active == 's1' }}>Semestre 1</option>
-            <option value="s2" {{ 'selected' if periode_active == 's2' }}>Semestre 2</option>
+            {% for p in periodes %}
+                <option value="{{ p.id_periode }}" {{ 'selected' if periode_active == (p.id_periode|string) }}>{{ p.nom }}</option>
+            {% endfor %}
         </select>
 
         <label for="matiere">Matière</label>

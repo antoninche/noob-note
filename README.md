@@ -13,30 +13,29 @@ L’objectif est d’avoir un code clair, compréhensible par un niveau **Termin
 ## Fonctionnalités actuelles
 
 ### Espace Professeur
-- Connexion professeur.
-- Liste des élèves par classe.
+- Connexion professeur (mots de passe **hachés**).
+- Liste des élèves par classe (onglets générés depuis la base).
 - Recherche d’élève par nom.
-- Gestion des notes en **CRUD** :
-  - ajouter une note,
-  - modifier une note,
-  - supprimer une note.
+- Gestion des notes en **CRUD** (ajouter / modifier / supprimer).
 - Statistiques par matière et par classe (moyenne / min / max).
+- **Emploi du temps** personnel (grille hebdomadaire, jour du jour surligné).
+- **Cahier de textes** : donner un devoir à une classe.
+- **Vie scolaire** : signaler une absence, un retard ou une observation.
 
 ### Espace Élève
-- Connexion élève.
+- Connexion élève (mots de passe **hachés**).
 - Page **Notes** avec :
-  - filtre par période,
-  - filtre par matière,
+  - filtre par **trimestre** (périodes réelles) et par matière,
   - tri par matière ou chronologique,
-  - panneau de détail d’une note,
-  - moyenne générale + rang.
-- Export d’un bulletin `.txt`.
+  - panneau de détail d’une note (moyenne / min / max de la classe),
+  - moyenne générale + rang, couleur par matière.
+- Export d’un bulletin `.txt` (généré en mémoire).
 - Pages dédiées :
   - **Mes données**,
-  - **Cahier de textes**,
-  - **Résultats**,
-  - **Vie scolaire**,
-  - **Emploi du temps** (affiche les cours si présents en base, sinon message vide).
+  - **Cahier de textes** (devoirs à faire de la classe),
+  - **Résultats** (moyennes par matière et par trimestre),
+  - **Vie scolaire** (absences / retards / observations),
+  - **Emploi du temps** en grille hebdomadaire colorée.
 
 ---
 
@@ -48,29 +47,24 @@ L’objectif est d’avoir un code clair, compréhensible par un niveau **Termin
 
 ---
 
-## Structure du projet (version actuelle)
+## Structure du projet
 ```text
 noob-note/
-├── app.py
-├── generer_pronote_db.py
-├── pronote.db
+├── app.py                # Backend Flask (routes + classes métier)
+├── generer_db.py         # Génération de la base de démonstration
+├── pronote.db            # Base SQLite (données de démonstration)
 ├── requirements.txt
 ├── README.md
 ├── static/
 │   └── css/
-│       └── style.css
+│       └── style.css     # Feuille de style unique (look PRONOTE)
 └── templates/
-    ├── base_eleve.html
+    ├── base_eleve.html   # Gabarit espace élève
+    ├── base_prof.html    # Gabarit espace professeur
     ├── login.html
-    ├── prof.html
-    ├── prof_gestion.html
-    ├── eleve.html
-    ├── mes_donnees.html
-    ├── cahier_texte.html
-    ├── resultats.html
-    ├── vie_scolaire.html
-    ├── emploi_du_temps.html
-    └── page_eleve_construction.html
+    ├── prof.html, prof_gestion.html, prof_emploi.html, prof_cahier.html, prof_vie.html
+    ├── eleve.html, mes_donnees.html, cahier_texte.html
+    ├── resultats.html, vie_scolaire.html, emploi_du_temps.html
 ```
 
 ---
@@ -78,11 +72,14 @@ noob-note/
 ## Base de données
 Le projet utilise `pronote.db`.
 
-Le script `generer_pronote_db.py` permet de générer une base de test plus riche (classes, élèves, professeurs, matières, notes, emplois du temps).
+Le script `generer_db.py` génère une base riche : classes, périodes (trimestres),
+élèves, professeurs, matières, notes, emploi du temps, cahier de textes (devoirs)
+et vie scolaire (absences / retards / observations). Les mots de passe sont hachés.
 
-Exemple d’exécution :
+Exemple d’exécution (écrase `pronote.db` par défaut) :
 ```bash
-python generer_pronote_db.py
+python generer_db.py                 # 20 classes, 30 élèves, 60 notes chacun
+python generer_db.py --classes 5     # version plus légère
 ```
 
 ---
@@ -94,8 +91,8 @@ python generer_pronote_db.py
   Mot de passe : pass1
 
 Professeur
-  Identifiant : p1
-  Mot de passe : mdp_prof1
+  Identifiant : p1_1
+  Mot de passe : mdp_p1_1
 ```
 
 ---

@@ -3,23 +3,50 @@
 {% block titre %}Vie scolaire - PRONOTE{% endblock %}
 
 {% block contenu %}
-<section class="card page-simple">
-    <h2>Vie scolaire</h2>
-    {% if infos %}
-        <p><strong>Classe :</strong> {{ infos.nom_classe }}</p>
-    {% endif %}
-    <div class="infos-grid">
-        <p><strong>Nombre de cours par semaine :</strong> {{ nb_cours_semaine }}</p>
-        <p><strong>Matières différentes :</strong> {{ matieres_differentes }}</p>
+<section class="cartes-resume">
+    <div class="tuile-resume">
+        <span class="tuile-nombre">{{ resume.absences }}</span>
+        <span class="tuile-libelle">Absences</span>
     </div>
-    <p>
-        Cette page pourra ensuite accueillir les retards, absences, sanctions,
-        observations et messages de la vie scolaire.
-    </p>
-    {% if not table_emploi_disponible %}
-        <p><em>Aucun cours n'est enregistré pour l'instant dans la base.</em></p>
-    {% elif nb_cours_semaine == 0 %}
-        <p><em>Aucun cours n'est encore affecté à ta classe.</em></p>
-    {% endif %}
+    <div class="tuile-resume">
+        <span class="tuile-nombre">{{ resume.retards }}</span>
+        <span class="tuile-libelle">Retards</span>
+    </div>
+    <div class="tuile-resume">
+        <span class="tuile-nombre">{{ resume.observations }}</span>
+        <span class="tuile-libelle">Observations</span>
+    </div>
+    <div class="tuile-resume tuile-alerte">
+        <span class="tuile-nombre">{{ resume.non_justifies }}</span>
+        <span class="tuile-libelle">Non justifiés</span>
+    </div>
 </section>
-{% endblock %} 
+
+<section class="card page-simple">
+    <h2>Mon suivi de vie scolaire</h2>
+    {% if infos %}<p class="sous-texte">Classe : {{ infos.nom_classe }}</p>{% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Motif</th>
+                <th>Justifié</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in evenements %}
+            <tr>
+                <td><span class="etiquette-vie type-{{ e.type|lower }}">{{ e.type }}</span></td>
+                <td>{{ e.date }}</td>
+                <td>{{ e.motif }}</td>
+                <td>{{ 'Oui' if e.justifie else 'Non' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4">Aucun événement : continue comme ça !</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

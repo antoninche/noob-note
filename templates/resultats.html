@@ -13,7 +13,16 @@
         <h2>{{ stats.rang }} / {{ stats.total }}</h2>
     </div>
 </section>
- 
+
+<section class="cartes-resume">
+    {% for p in moyennes_periodes %}
+        <div class="tuile-resume">
+            <span class="tuile-nombre">{{ p.moyenne }}</span>
+            <span class="tuile-libelle">{{ p.nom }} ({{ p.nb_notes }} notes)</span>
+        </div>
+    {% endfor %}
+</section>
+
 <section class="card page-simple">
     <h2>Résultats par matière</h2>
     <table>

@@ -1,19 +1,29 @@
 {% extends "base_eleve.html" %}
 
-{% block titre %}Cahier de texte - PRONOTE{% endblock %}
+{% block titre %}Cahier de textes - PRONOTE{% endblock %}
 
 {% block contenu %}
 <section class="card page-simple">
-    <h2>Cahier de texte</h2>
-    <p>Propositions de travail basées sur tes dernières évaluations :</p>
+    <div class="entete-page">
+        <h2>Cahier de textes</h2>
+        <span class="badge-classe">Travail à faire</span>
+    </div>
+
     <ul class="liste-cahier">
-        {% for entree in cahier %}
-            <li>
-                <span class="tag-date">{{ entree.date_note }}</span>
-                <strong>{{ entree.nom_matiere }}</strong> — {{ entree.description }}
+        {% for devoir in devoirs %}
+            {% set couleur = couleur_matiere(devoir.nom_matiere) %}
+            <li style="border-left-color: {{ couleur.bord }};" class="{{ 'devoir-passe' if not devoir.a_venir }}">
+                <div class="devoir-tete">
+                    <span>
+                        <span class="pastille-matiere" style="background: {{ couleur.bord }};"></span>
+                        <strong>{{ devoir.nom_matiere }}</strong>
+                    </span>
+                    <span class="tag-date">Pour le {{ devoir.date_pour }}</span>
+                </div>
+                <p class="devoir-desc">{{ devoir.description }}</p>
             </li>
         {% else %}
-            <li>Aucune donnée disponible pour le moment.</li>
+            <li>Aucun devoir enregistré pour ta classe.</li>
         {% endfor %}
     </ul>
 </section>

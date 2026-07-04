@@ -1,0 +1,12 @@
+# Système
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.venv_test/
+venv/
+
+# Fichiers générés
+bulletin_*.txt

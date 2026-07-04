@@ -1,0 +1,51 @@
+{% extends "base_prof.html" %}
+
+{% block titre %}Vie scolaire - PRONOTE{% endblock %}
+
+{% block contenu %}
+<div class="card">
+    <h3>Signaler un événement</h3>
+    <form method="POST" action="{{ url_for('prof_vie_scolaire') }}" class="form-inline">
+        <input type="text" name="id_eleve" placeholder="ID élève" required style="width: 90px;">
+        <select name="type_evenement">
+            <option value="Absence">Absence</option>
+            <option value="Retard">Retard</option>
+            <option value="Observation">Observation</option>
+        </select>
+        <input type="text" name="date_evenement" placeholder="Date (JJ/MM/AAAA)" required>
+        <input type="text" name="motif" placeholder="Motif..." style="min-width: 200px;" required>
+        <label style="font-weight:600; color:#4a5b66;">
+            <input type="checkbox" name="justifie" value="1" style="margin-right:4px;"> Justifié
+        </label>
+        <button type="submit">Enregistrer</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Derniers événements</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Élève</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Motif</th>
+                <th>Justifié</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in evenements %}
+            <tr>
+                <td>{{ e.prenom }} {{ e.nom }} <small>(n°{{ e.id_eleve }})</small></td>
+                <td><span class="etiquette-vie type-{{ e.type|lower }}">{{ e.type }}</span></td>
+                <td>{{ e.date }}</td>
+                <td>{{ e.motif }}</td>
+                <td>{{ 'Oui' if e.justifie else 'Non' }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5">Aucun événement enregistré.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
