@@ -4,7 +4,7 @@
 **NOOB-NOTE** est un projet NSI qui reproduit les bases de PRONOTE avec une architecture simple :
 - **Backend** en Python/Flask,
 - **base de données** en SQLite,
-- **interface** en HTML/CSS.
+- **interface** en HTML/CSS. 
 
 L’objectif est d’avoir un code clair, compréhensible par un niveau **Terminale NSI**, tout en proposant une vraie logique métier (professeur / élève, notes, moyennes, rang, emploi du temps).
 
