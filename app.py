@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-"""NOOB-NOTE : mini-PRONOTE en Flask + SQLite.
-
+"""NOOB-NOTE : mini-PRONOTE en Flask + SQLite
 Organisation du fichier :
 1. Configuration + outils communs (couleurs, dates, accès base, décorateur)
 2. Classes métier : Utilisateur -> Professeur / Eleve
 3. Routes Flask (connexion, espace prof, espace élève)
 """
 
-import io
+import iov
 import os
 import sqlite3
 from datetime import datetime
