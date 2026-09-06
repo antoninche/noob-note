@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Script de génération d'une base PRONOTE de démonstration (version enrichie).
+Script de génération d'une base PRONOTE de démonstration ( version enrichie).
 
 Objectif :
 - beaucoup de classes et d'élèves,
