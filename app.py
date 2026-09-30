@@ -5,7 +5,6 @@ Organisation du fichier :
 2. Classes métier : Utilisateur -> Professeur / Eleve
 3. Routes Flask (connexion, espace prof, espace élève)
 """
-
 import iov
 import os
 import sqlite3
